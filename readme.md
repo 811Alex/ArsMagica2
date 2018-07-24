@@ -1,16 +1,20 @@
 Ars Magica 2 - Reborn 1.10.2
 ========
-(This is a fork from Growlith1223's repository & merged with EdwinMindcraft's repository)
+This is a fork from Growlith1223's repository, merged with EdwinMindcraft's repository & various fixes from here and there.
+However, the main goal of this fork is to provide a version that people can use on servers running Forge Essentials.
+Use the "1.10.2" branch ("General" version) on clients and the "1.10.2-Server" branch ("Server" version) on servers.
 
-[![Build Status](https://travis-ci.org/EdwinMindcraft/ArsMagica2.svg?branch=1.10.2)](https://travis-ci.org/EdwinMindcraft/ArsMagica2)
+I might fix game-breaking bugs as I come across them, but my time is rather limited, so I can't promise anything.
+Feel free to make pull requests, just keep your code readable & clean enough, make separate commits for separate things and if you plan on making a huge commit, maybe discuss it with me first, to make sure your time won't go to waste.
 
+--------
 This is a reworked version of the Ars Magica 2 mod by Mithion.
 
 ## Useful Links
 * [Homepage](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292222)
 * [Unofficial Wiki](http://am2.wikia.com/wiki/Ars_Magica_2_Wiki)
 * [How to Report a Bug Properly](http://pastebin.com/29r0Nhe0)
-* [Builds](https://github.com/EdwinMindcraft/ArsMagica2/releases)
+* [Builds](https://github.com/811Alex/ArsMagica2/releases)
 
 ## Moving from AM2-1.5.0 to AM2-1.5.0C
 
