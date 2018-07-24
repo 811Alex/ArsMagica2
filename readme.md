@@ -6,8 +6,8 @@ Use the "1.10.2" branch ("General" version) on clients and the "1.10.2-Server" b
 
 I might fix game-breaking bugs as I come across them, but my time is rather limited, so I can't promise anything.
 Feel free to make pull requests, just keep your code readable & clean enough, make separate commits for separate things and if you plan on making a huge commit, maybe discuss it with me first, to make sure your time won't go to waste.
---------
 
+--------
 This is a reworked version of the Ars Magica 2 mod by Mithion.
 
 ## Useful Links
