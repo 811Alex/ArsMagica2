@@ -29,7 +29,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
 
-version = "${config.version}.${config.build_number}-CA+General"
+version = "${config.version}.${config.build_number}-CA+Server"
 group= "am2" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "ArsMagica2"
 
