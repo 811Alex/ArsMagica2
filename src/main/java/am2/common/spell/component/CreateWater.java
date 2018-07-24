@@ -1,7 +1,6 @@
 package am2.common.spell.component;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -22,7 +21,6 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -63,14 +61,7 @@ public class CreateWater extends SpellComponent{
 		return null;
 	}
 
-	@Override
-	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier){
-		for (int i = 0; i < 15; ++i){
-			world.spawnParticle(EnumParticleTypes.WATER_SPLASH, x - 0.5 + rand.nextDouble(), y, z - 0.5 + rand.nextDouble(), 0.5 - rand.nextDouble(), 0.1, 0.5 - rand.nextDouble());
-		}
-	}
-
-	@Override
+    @Override
 	public Set<Affinity> getAffinity(){
 		return Sets.newHashSet(Affinity.WATER);
 	}

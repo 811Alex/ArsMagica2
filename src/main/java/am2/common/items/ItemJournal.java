@@ -1,7 +1,5 @@
 package am2.common.items;
 
-import java.util.List;
-
 import am2.common.utils.EntityUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -11,8 +9,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemJournal extends ItemArsMagica{
 
@@ -31,26 +27,6 @@ public class ItemJournal extends ItemArsMagica{
 	@Override
 	public boolean getShareTag(){
 		return true;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack journal, EntityPlayer player, List<String> list, boolean par4){
-		String owner = getOwner(journal);
-		if (owner == null){
-			list.add(I18n.format("am2.tooltip.unowned"));
-			list.add(I18n.format("am2.tooltip.journalUse"));
-			return;
-		}else{
-			list.add(String.format(I18n.format("am2.tooltip.journalOwner")));
-			list.add(String.format(I18n.format("am2.tooltip.journalOwner2"), owner));
-		}
-
-		if (owner.equals(player.getName()))
-			list.add(String.format(I18n.format("am2.tooltip.containedXP"), getXPInJournal(journal)));
-
-		if (owner == null || owner.equals(player.getName()))
-			list.add(I18n.format("am2.tooltip.journalUse"));
 	}
 
 	@Override

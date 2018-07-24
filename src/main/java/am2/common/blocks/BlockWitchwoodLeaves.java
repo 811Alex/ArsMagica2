@@ -5,10 +5,6 @@ import java.util.Random;
 
 import com.google.common.collect.Lists;
 
-import am2.ArsMagica2;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
-import am2.client.particles.ParticlePendulum;
 import am2.common.defs.BlockDefs;
 import am2.common.defs.CreativeTabsDefs;
 import am2.common.items.ItemBlockSubtypes;
@@ -22,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BlockWitchwoodLeaves extends BlockLeaves{
@@ -65,21 +60,6 @@ public class BlockWitchwoodLeaves extends BlockLeaves{
 	@Override
 	public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List<ItemStack> par3List){
 		par3List.add(new ItemStack(this));
-	}
-	
-	@Override
-	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-		if (!ArsMagica2.config.witchwoodLeafPFX())
-			return;
-		if (rand.nextInt(300) == 0 && worldIn.isAirBlock(pos.down())){
-			AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldIn, "leaf", pos.getX() + rand.nextDouble(), pos.getY() + rand.nextDouble(), pos.getZ() + rand.nextDouble());
-			if (particle != null){
-				particle.AddParticleController(new ParticleFloatUpward(particle, 0, -0.05f, 1, false));
-				particle.setMaxAge(120);
-				particle.setParticleScale(0.1f + rand.nextFloat() * 0.1f);
-				particle.AddParticleController(new ParticlePendulum(particle, 0.2f, 0.15f + rand.nextFloat() * 0.2f, 2, false));
-			}
-		}
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class ArsMagica2 {
 	public static final String GUIFACTORY = "am2.client.config.AMGuiFactory";
 	public static SimpleNetworkWrapper network;
 	
-	@SidedProxy(clientSide="am2.client.ClientProxy", serverSide="am2.common.CommonProxy", modId=MODID)
+	@SidedProxy(serverSide="am2.common.CommonProxy", modId=MODID)
 	public static CommonProxy proxy;
 	
 	@Instance(MODID)

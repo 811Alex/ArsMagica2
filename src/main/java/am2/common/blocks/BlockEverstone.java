@@ -3,16 +3,12 @@ package am2.common.blocks;
 import java.util.ArrayList;
 import java.util.List;
 
-import am2.ArsMagica2;
 import am2.common.blocks.tileentity.TileEntityEverstone;
 import am2.common.defs.ItemDefs;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.particle.ParticleDigging;
-import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -24,12 +20,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockEverstone extends BlockAMPowered{
 	
@@ -197,51 +190,5 @@ public class BlockEverstone extends BlockAMPowered{
 		IBlockState block = everstone.getFacade();
 		if (block == null || block == this) return this.blockHardness;
 		return block.getBlockHardness(worldIn, pos);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager) {
-
-		TileEntityEverstone everstone = getTE(world, pos);
-
-		for (int i = 0; i < 5 * ArsMagica2.config.getGFXLevel(); ++i){
-			IBlockState block;
-			if (everstone == null || everstone.getFacade() == null){
-				block = this.getDefaultState();
-			}else{
-				block = everstone.getFacade();
-				if (block == null) block = this.getDefaultState();
-			}
-			
-			manager.addEffect(new ParticleDigging.Factory().createParticle(0, world,
-					pos.getX() + world.rand.nextDouble(),
-					pos.getY() + world.rand.nextDouble(),
-					pos.getZ() + world.rand.nextDouble(), 0, 0, 0, Block.getStateId(block)));
-		}
-
-		return true;
-	}
-	
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager){
-		TileEntityEverstone everstone = getTE(worldObj, target.getBlockPos());
-		IBlockState block;
-		if (everstone == null || everstone.getFacade() == null){
-			block = this.getDefaultState();
-		}else{
-			block = everstone.getFacade();
-			if (block == null) block = this.getDefaultState();
-		}
-		
-		
-		manager.addEffect(new ParticleDigging.Factory().createParticle(0, worldObj,
-				target.getBlockPos().getX() + worldObj.rand.nextDouble(),
-				target.getBlockPos().getY() + worldObj.rand.nextDouble(),
-				target.getBlockPos().getZ() + worldObj.rand.nextDouble(), 0, 0, 0, Block.getStateId(block)));
-
-		return true;
 	}
 }

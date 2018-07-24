@@ -1,11 +1,8 @@
 package am2.common.blocks.tileentity.flickers;
 
-import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.affinity.Affinity;
 import am2.api.flickers.IFlickerController;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.defs.ItemDefs;
 import am2.common.utils.AffinityShiftUtils;
 import am2.api.flickers.AbstractFlickerFunctionality;
@@ -44,42 +41,24 @@ public class FlickerOperatorNaturesBounty extends AbstractFlickerFunctionality{
 		int radius = 6;
 		int diameter = radius * 2 + 1;
 		boolean updatedOnce = false;
-		if (!worldObj.isRemote){
-			for (int i = 0; i < (powered ? 5 : 1); ++i){
-				BlockPos effectPos = ((TileEntity)habitat).getPos().add(- radius + (worldObj.rand.nextInt(diameter)), 0, - radius + (worldObj.rand.nextInt(diameter)));
+		for (int i = 0; i < (powered ? 5 : 1); ++i){
+			BlockPos effectPos = ((TileEntity)habitat).getPos().add(- radius + (worldObj.rand.nextInt(diameter)), 0, - radius + (worldObj.rand.nextInt(diameter)));
 
-				while (worldObj.isAirBlock(effectPos) && effectPos.getY() > 0){
-					effectPos = effectPos.down();
-				}
-
-				while (!worldObj.isAirBlock(effectPos) && effectPos.getY() > 0){
-					effectPos = effectPos.up();
-				}
-
-				effectPos.down();
-
-
-				Block block = worldObj.getBlockState(effectPos).getBlock();
-				if (block instanceof IPlantable || block instanceof IGrowable){
-					block.updateTick(worldObj, effectPos, worldObj.getBlockState(effectPos), worldObj.rand);
-					updatedOnce = true;
-				}
+			while (worldObj.isAirBlock(effectPos) && effectPos.getY() > 0){
+				effectPos = effectPos.down();
 			}
-		}else{
-			int posY = ((TileEntity)habitat).getPos().getY();
-			while (!worldObj.isAirBlock(new BlockPos(((TileEntity)habitat).getPos().getX(), posY, ((TileEntity)habitat).getPos().getZ()))){
-				posY++;
-			}
-			posY--;
-			for (int i = 0; i < ArsMagica2.config.getGFXLevel() * 2; ++i){
-				AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "plant", ((TileEntity)habitat).getPos().getX() + 0.5, posY + 0.5f, ((TileEntity)habitat).getPos().getZ() + 0.5);
-				if (particle != null){
 
-					particle.addRandomOffset(diameter, 0, diameter);
-					particle.AddParticleController(new ParticleFloatUpward(particle, 0.01f, 0.04f, 1, false));
-					particle.setMaxAge(16);
-					particle.setParticleScale(0.08f);
-				}
+			while (!worldObj.isAirBlock(effectPos) && effectPos.getY() > 0){
+				effectPos = effectPos.up();
+			}
+
+			effectPos.down();
+
+
+			Block block = worldObj.getBlockState(effectPos).getBlock();
+			if (block instanceof IPlantable || block instanceof IGrowable){
+				block.updateTick(worldObj, effectPos, worldObj.getBlockState(effectPos), worldObj.rand);
+				updatedOnce = true;
 			}
 		}
 

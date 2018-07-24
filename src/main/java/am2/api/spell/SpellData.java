@@ -189,9 +189,6 @@ public class SpellData {
 						}
 					}
 					success = true;
-					if (world.isRemote){
-						component.spawnParticles(world, target.posX, target.posY + target.getEyeHeight(), target.posZ, caster, target, world.rand, getColor(world, caster, target));
-					}
 				}
 			}
 		}
@@ -225,9 +222,6 @@ public class SpellData {
 						}
 					}
 					success = true;
-					if (world.isRemote){
-						component.spawnParticles(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, caster, null, world.rand, getColor(world, caster, null));
-					}
 				}
 			}
 		}

@@ -1,12 +1,10 @@
 package am2.common.spell.component;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import am2.ArsMagica2;
 import am2.api.affinity.Affinity;
 import am2.api.blocks.IMultiblock;
 import am2.api.rituals.IRitualInteraction;
@@ -15,10 +13,6 @@ import am2.api.spell.Operation;
 import am2.api.spell.SpellComponent;
 import am2.api.spell.SpellData;
 import am2.api.spell.SpellModifiers;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFadeOut;
-import am2.client.particles.ParticleFloatUpward;
-import am2.client.particles.ParticleOrbitPoint;
 import am2.common.buffs.BuffEffectHaste;
 import am2.common.defs.ItemDefs;
 import am2.common.defs.PotionEffectsDefs;
@@ -31,8 +25,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Haste extends SpellComponent implements IRitualInteraction{
 
@@ -75,25 +67,7 @@ public class Haste extends SpellComponent implements IRitualInteraction{
 		return null;
 	}
 
-	@Override
-	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier){
-		for (int i = 0; i < 25; ++i){
-			AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, "mystic", x, y - 1, z);
-			if (particle != null){
-				particle.addRandomOffset(1, 1, 1);
-				particle.AddParticleController(new ParticleFloatUpward(particle, 0, 0.1f, 1, false));
-				particle.AddParticleController(new ParticleOrbitPoint(particle, x, y, z, 2, false).setIgnoreYCoordinate(true).SetOrbitSpeed(0.1f).SetTargetDistance(0.3f + rand.nextDouble() * 0.3));
-				particle.AddParticleController(new ParticleFadeOut(particle, 1, false).setFadeSpeed(0.05f).setKillParticleOnFinish(true));
-				particle.setMaxAge(20);
-				particle.setParticleScale(0.1f);
-				if (colorModifier > -1){
-					particle.setRGBColorF(((colorModifier >> 16) & 0xFF) / 255.0f, ((colorModifier >> 8) & 0xFF) / 255.0f, (colorModifier & 0xFF) / 255.0f);
-				}
-			}
-		}
-	}
-
-	@Override
+    @Override
 	public Set<Affinity> getAffinity(){
 		return Sets.newHashSet(Affinity.LIGHTNING);
 	}
@@ -134,10 +108,5 @@ public class Haste extends SpellComponent implements IRitualInteraction{
 		// TODO Auto-generated method stub
 		
 	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public ItemStack getResult() {
-		return null;
-	}
+
 }

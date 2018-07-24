@@ -1,12 +1,7 @@
 package am2.common.blocks.tileentity;
 
-import am2.ArsMagica2;
 import am2.api.blocks.IKeystoneLockable;
 import am2.api.items.ISpellFocus;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFadeOut;
-import am2.client.particles.ParticleHoldPosition;
-import am2.client.particles.ParticleOrbitPoint;
 import am2.common.power.PowerNodeRegistry;
 import am2.common.power.PowerTypes;
 import am2.common.utils.DimensionUtilities;
@@ -87,37 +82,6 @@ public class TileEntityAstralBarrier extends TileEntityAMPower implements IInven
 
 		if (IsActive()){
 			PowerNodeRegistry.For(this.worldObj).consumePower(this, PowerNodeRegistry.For(worldObj).getHighestPowerType(this), 0.35f * radius);
-		}
-
-		if (worldObj.isRemote){
-			if (IsActive()){
-				if (displayAura){
-					AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "symbols", pos.getX(), pos.getY() + 0.5, pos.getZ());
-					if (effect != null){
-						effect.setIgnoreMaxAge(false);
-						effect.setMaxAge(100);
-						effect.setParticleScale(0.5f);
-						effect.AddParticleController(new ParticleOrbitPoint(effect, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1, false).SetOrbitSpeed(0.03).SetTargetDistance(radius));
-					}
-				}
-
-				particleTickCounter++;
-
-				if (particleTickCounter >= 15){
-
-					particleTickCounter = 0;
-
-					AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "sparkle", pos.getX() + 0.5, pos.getY() + 0.1 + worldObj.rand.nextDouble() * 0.5, pos.getZ() + 0.5);
-					if (effect != null){
-						effect.setIgnoreMaxAge(false);
-						effect.setMaxAge(100);
-						effect.setParticleScale(0.5f);
-						effect.AddParticleController(new ParticleOrbitPoint(effect, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1, false).SetOrbitSpeed(0.005).SetTargetDistance(worldObj.rand.nextDouble() * 0.6 - 0.3));
-						effect.AddParticleController(new ParticleHoldPosition(effect, 80, 2, true));
-						effect.AddParticleController(new ParticleFadeOut(effect, 3, false).setFadeSpeed(0.05f));
-					}
-				}
-			}
 		}
 	}
 

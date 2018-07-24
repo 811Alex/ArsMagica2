@@ -1,14 +1,8 @@
 package am2.common.items;
 
-import java.util.List;
-
 import am2.common.defs.CreativeTabsDefs;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemOre extends ItemArsMagica {
 	
@@ -36,14 +30,6 @@ public class ItemOre extends ItemArsMagica {
 		 setHasSubtypes(true);
 		 setMaxDamage(0);
 		 setCreativeTab(CreativeTabsDefs.tabAM2Items);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
-		for (int i = 0; i < names.length; i++) {
-			subItems.add(new ItemStack(this, 1, i));
-		}
 	}
 	
 	@Override

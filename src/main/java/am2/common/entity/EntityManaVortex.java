@@ -2,13 +2,7 @@ package am2.common.entity;
 
 import java.util.List;
 
-import am2.ArsMagica2;
 import am2.api.DamageSources;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleArcToEntity;
-import am2.client.particles.ParticleFadeOut;
-import am2.client.particles.ParticleLeaveParticleTrail;
-import am2.client.particles.ParticleMoveOnHeading;
 import am2.common.extensions.EntityExtension;
 import am2.common.utils.MathUtilities;
 import net.minecraft.entity.Entity;
@@ -65,36 +59,17 @@ public class EntityManaVortex extends Entity{
 
 		if (getTicksToExist() - this.ticksExisted <= 5 && !hasGoneBoom){
 			hasGoneBoom = true;
-			if (!worldObj.isRemote){
-				List<EntityLivingBase> players = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().expand(3 + Math.floor(this.ticksExisted / 50), 2, 3 + Math.floor(this.ticksExisted / 50)));
-				float damage = this.dataManager.get(MANA_STOLEN) * 0.005f;
-				if (damage > 100)
-					damage = 100;
+			List<EntityLivingBase> players = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().expand(3 + Math.floor(this.ticksExisted / 50), 2, 3 + Math.floor(this.ticksExisted / 50)));
+			float damage = this.dataManager.get(MANA_STOLEN) * 0.005f;
+			if (damage > 100)
+				damage = 100;
 
-				Object[] playerArray = players.toArray();
-				for (Object o : playerArray){
-					EntityLivingBase e = (EntityLivingBase)o;
-					RayTraceResult mop = this.worldObj.rayTraceBlocks(new Vec3d(this.posX, this.posY, this.posZ), new Vec3d(e.posX, e.posY + e.getEyeHeight(), e.posZ), false);
-					if (mop == null)
-						e.attackEntityFrom(DamageSources.causePhysicalDamage(this), damage);
-				}
-			}else{
-				for (int i = 0; i < 360; i += ArsMagica2.config.FullGFX() ? 5 : ArsMagica2.config.LowGFX() ? 10 : 20){
-					AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "ember", this.posX, this.posY, this.posZ);
-					if (effect != null){
-						effect.setIgnoreMaxAge(true);
-						effect.AddParticleController(new ParticleMoveOnHeading(effect, i, 0, 0.7f, 1, false));
-						effect.setRGBColorF(0.24f, 0.24f, 0.8f);
-						effect.AddParticleController(new ParticleFadeOut(effect, 1, false).setFadeSpeed(0.05f).setKillParticleOnFinish(true));
-						effect.AddParticleController(
-								new ParticleLeaveParticleTrail(effect, "ember", false, 5, 1, false)
-										.addControllerToParticleList(new ParticleMoveOnHeading(effect, i, 0, 0.1f, 1, false))
-										.addControllerToParticleList(new ParticleFadeOut(effect, 1, false).setFadeSpeed(0.1f).setKillParticleOnFinish(true))
-										.setParticleRGB_F(0.24f, 0.24f, 0.8f)
-										.addRandomOffset(0.2f, 0.2f, 0.2f)
-						);
-					}
-				}
+			Object[] playerArray = players.toArray();
+			for (Object o : playerArray){
+				EntityLivingBase e = (EntityLivingBase)o;
+				RayTraceResult mop = this.worldObj.rayTraceBlocks(new Vec3d(this.posX, this.posY, this.posZ), new Vec3d(e.posX, e.posY + e.getEyeHeight(), e.posZ), false);
+				if (mop == null)
+					e.attackEntityFrom(DamageSources.causePhysicalDamage(this), damage);
 			}
 		}
 
@@ -109,21 +84,6 @@ public class EntityManaVortex extends Entity{
 				RayTraceResult mop = this.worldObj.rayTraceBlocks(new Vec3d(this.posX, this.posY, this.posZ), new Vec3d(e.posX, e.posY + e.getEyeHeight(), e.posZ), false);
 				if (mop != null)
 					continue;
-
-				if (worldObj.isRemote){
-					if (ArsMagica2.config.NoGFX()){
-						break;
-					}
-					if (ArsMagica2.config.LowGFX() && (this.ticksExisted % 4) != 0){
-						break;
-					}
-					AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "ember", e.posX, e.posY + (e.getEyeHeight() / 2), e.posZ);
-					if (effect != null){
-						effect.setRGBColorF(0.24f, 0.24f, 0.8f);
-						effect.AddParticleController(new ParticleArcToEntity(effect, 1, this, false).generateControlPoints().setKillParticleOnFinish(true));
-						effect.setIgnoreMaxAge(true);
-					}
-				}
 				float manaStolen = EntityExtension.For(e).getMaxMana() * 0.01f;
 				float curMana = EntityExtension.For(e).getCurrentMana();
 

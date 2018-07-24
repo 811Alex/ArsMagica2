@@ -1,7 +1,6 @@
 package am2.common.spell.component;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -28,8 +27,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Rift extends SpellComponent implements IRitualInteraction{
 
@@ -105,11 +102,7 @@ public class Rift extends SpellComponent implements IRitualInteraction{
 		return null;
 	}
 
-	@Override
-	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier){
-	}
-
-	@Override
+    @Override
 	public Set<Affinity> getAffinity(){
 		return Sets.newHashSet(Affinity.NONE);
 	}
@@ -152,10 +145,5 @@ public class Rift extends SpellComponent implements IRitualInteraction{
 		// TODO Auto-generated method stub
 		
 	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public ItemStack getResult() {
-		return new ItemStack(BlockDefs.inertSpawner);
-	}
+
 }

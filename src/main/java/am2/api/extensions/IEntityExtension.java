@@ -193,8 +193,6 @@ public interface IEntityExtension {
 
 	void deductMana(float amt);
 
-	void spawnManaLinkParticles();
-
 	boolean removeSummon();
 
 	boolean isManaLinkedTo(EntityLivingBase entity);

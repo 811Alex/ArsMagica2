@@ -1,35 +1,23 @@
 package am2.common.items;
 
-import java.util.List;
-
 import am2.common.buffs.BuffEffectManaRegen;
 import am2.common.defs.ItemDefs;
 import am2.common.extensions.EntityExtension;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemManaPotion extends ItemArsMagica{
 
 	public ItemManaPotion(){
 		super();
 		this.setMaxStackSize(1);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean hasEffect(ItemStack par1ItemStack){
-		return true;
 	}
 
 	@Override
@@ -116,11 +104,4 @@ public class ItemManaPotion extends ItemArsMagica{
 	public boolean getHasSubtypes(){
 		return false;
 	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List<ItemStack> par3List){
-		super.getSubItems(par1, par2CreativeTabs, par3List);
-	}
-
 }

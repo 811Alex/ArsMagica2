@@ -33,8 +33,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityDarkMage extends EntityMob{
 
@@ -201,11 +199,4 @@ public class EntityDarkMage extends EntityMob{
 			this.entityDropItem(itemstack, 0.0F);
 		}
 	}
-
-	@SideOnly(Side.CLIENT)
-	public String getTexture(){
-		return String.format("arsmagica2:textures/mobs/dark_mages/dark_mage_%d.png", this.dataManager.get(MAGE_SKIN).intValue());
-	}
-
-
 }

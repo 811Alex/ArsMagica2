@@ -9,10 +9,8 @@ import am2.common.power.PowerNodeRegistry;
 import am2.common.power.PowerTypes;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -24,8 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockManaBattery extends BlockAMPowered{
 
@@ -129,21 +125,6 @@ public class BlockManaBattery extends BlockAMPowered{
 	@Override
 	public boolean hasComparatorInputOverride(IBlockState state) {
 		return true;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List<ItemStack> par3List){
-		ItemStack stack = new ItemStack(this);
-
-		par3List.add(stack);
-		for (PowerTypes type : PowerTypes.all()){
-			stack = new ItemStack(this, 1, type.ID());
-			stack.setTagCompound(new NBTTagCompound());
-			stack.getTagCompound().setFloat("mana_battery_charge", new TileEntityManaBattery().getCapacity());
-			stack.getTagCompound().setInteger("mana_battery_powertype", type.ID());
-			par3List.add(stack);
-		}
 	}
 
 //	@Override

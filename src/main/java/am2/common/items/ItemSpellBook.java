@@ -1,6 +1,5 @@
 package am2.common.items;
 
-import java.util.List;
 import java.util.Map;
 
 import am2.ArsMagica2;
@@ -9,11 +8,8 @@ import am2.common.defs.IDDefs;
 import am2.common.defs.ItemDefs;
 import am2.common.enchantments.AMEnchantmentHelper;
 import am2.common.enchantments.AMEnchantments;
-import am2.common.extensions.SkillData;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -27,12 +23,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 
 public class ItemSpellBook extends ItemArsMagica{
-
 	public static final byte ID_NEXT_SPELL = 0;
 	public static final byte ID_PREV_SPELL = 1;
 	
@@ -43,16 +36,6 @@ public class ItemSpellBook extends ItemArsMagica{
 		super();
 		this.setMaxDamage(0);
 		this.setMaxStackSize(1);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public String getItemStackDisplayName(ItemStack par1ItemStack){
-		ItemStack activeSpell = GetActiveItemStack(par1ItemStack);
-		if (activeSpell != null){
-			return String.format("\2477%s (" + activeSpell.getDisplayName() + "\2477)", I18n.format("item.arsmagica2:spellbook.name"));
-		}
-		return I18n.format("item.arsmagica2:spellbook.name");
 	}
 
 	@Override
@@ -241,24 +224,6 @@ public class ItemSpellBook extends ItemArsMagica{
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List<String> par3List, boolean par4){
-		ItemSpellBase activeScroll = GetActiveScroll(par1ItemStack);
-		ItemStack stack = GetActiveItemStack(par1ItemStack);
-
-		String s = I18n.format("am2.tooltip.open");
-		String s2 = I18n.format("am2.tooltip.scroll");
-		par3List.add((new StringBuilder()).append("\2477").append(s).toString());
-		par3List.add((new StringBuilder()).append("\2477").append(s2).toString());
-		if (activeScroll != null){
-			activeScroll.addInformation(stack, par2EntityPlayer, par3List, par4);
-		}
-
-		par3List.add("\247c" + I18n.format("am2.tooltip.spellbookWarning1") + "\247f");
-		par3List.add("\247c" + I18n.format("am2.tooltip.spellbookWarning2") + "\247f");
-	}
-
-	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
 		ItemStack scrollStack = GetActiveItemStack(stack);
 		if (scrollStack != null){
@@ -285,22 +250,6 @@ public class ItemSpellBook extends ItemArsMagica{
 	@Override
 	public boolean isItemTool(ItemStack par1ItemStack){
 		return true;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void onUpdate(ItemStack stack, World world, Entity entity, int par4, boolean par5){
-		super.onUpdate(stack, world, entity, par4, par5);
-		if (entity instanceof EntityPlayerSP){
-			EntityPlayerSP player = (EntityPlayerSP)entity;
-			ItemStack usingItem = player.getActiveItemStack();
-			if (usingItem != null && usingItem.getItem() == this){
-				if (SkillData.For(player).hasSkill("spell_motion")){
-					player.movementInput.moveForward *= 2.5F;
-					player.movementInput.moveStrafe *= 2.5F;
-				}
-			}
-		}
 	}
 }
 

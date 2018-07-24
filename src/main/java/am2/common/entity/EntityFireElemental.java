@@ -1,10 +1,5 @@
 package am2.common.entity;
 
-import java.util.List;
-
-import am2.ArsMagica2;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleApproachPoint;
 import am2.common.entity.ai.EntityAIFireballAttack;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -15,7 +10,6 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -24,7 +18,6 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class EntityFireElemental extends EntityMob{
@@ -130,28 +123,6 @@ public class EntityFireElemental extends EntityMob{
 
 	@Override
 	public void onUpdate(){
-		int cookTargetID = dataManager.get(COOK_TARGET_ID);
-		if (cookTargetID != 0){
-			List<EntityItem> items = worldObj.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(cookRadius, cookRadius, cookRadius));
-			EntityItem inanimate = null;
-			for (EntityItem item : items){
-				if (item.getEntityId() == cookTargetID){
-					inanimate = item;
-				}
-			}
-
-			if (inanimate != null && worldObj.isRemote){
-				AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "fire", posX, posY + getEyeHeight(), posZ);
-				if (effect != null){
-					effect.setIgnoreMaxAge(true);
-					effect.AddParticleController(new ParticleApproachPoint(effect, inanimate.posX + (rand.nextFloat() - 0.5), inanimate.posY + (rand.nextFloat() - 0.5), inanimate.posZ + (rand.nextFloat() - 0.5), 0.1f, 0.1f, 1, false).setKillParticleOnFinish(true));
-				}
-			}
-		}
-
-		if (worldObj.isRemote && rand.nextInt(100) > 75 && !isBurning())
-			for (int i = 0; i < ArsMagica2.config.getGFXLevel(); i++)
-				worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, posX + (rand.nextDouble() - 0.5D) * width, posY + rand.nextDouble() * height, posZ + (rand.nextDouble() - 0.5D) * width, 0.0D, 0.0D, 0.0D);
 		super.onUpdate();
 	}
 

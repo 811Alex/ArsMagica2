@@ -48,7 +48,7 @@ public class AnimationAPI {
 	
 	@Instance("AnimationAPI")
 	public static AnimationAPI instance;
-	@SidedProxy(clientSide="thehippomaster.AnimationAPI.client.ClientProxy", serverSide="thehippomaster.AnimationAPI.CommonProxy")
+	@SidedProxy(serverSide="thehippomaster.AnimationAPI.CommonProxy")
 	public static CommonProxy proxy;
 	public static SimpleNetworkWrapper wrapper;
 	

@@ -1,18 +1,14 @@
 package am2.common.spell.component;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import am2.ArsMagica2;
 import am2.api.affinity.Affinity;
 import am2.api.spell.SpellComponent;
 import am2.api.spell.SpellData;
 import am2.api.spell.SpellModifiers;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleOrbitEntity;
 import am2.common.defs.ItemDefs;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -44,19 +40,7 @@ public class Accelerate extends SpellComponent{
 		return null;
 	}
 
-	@Override
-	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier){
-		AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, "sparkle", x, y, z);
-		if (particle != null){
-			particle.AddParticleController(new ParticleOrbitEntity(particle, caster, 0.1f, 1, false).SetTargetDistance(rand.nextDouble() + 0.5));
-			particle.setMaxAge(25 + rand.nextInt(10));
-			if (colorModifier > -1){
-				particle.setRGBColorF(((colorModifier >> 16) & 0xFF) / 255.0f, ((colorModifier >> 8) & 0xFF) / 255.0f, (colorModifier & 0xFF) / 255.0f);
-			}
-		}
-	}
-
-	@Override
+    @Override
 	public Object[] getRecipe(){
 		return new Object[]{
 				new ItemStack(ItemDefs.rune, 1, EnumDyeColor.YELLOW.getDyeDamage()),

@@ -6,10 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemShield;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SuppressWarnings("deprecation")
 public class ItemBoundShield extends ItemShield implements IBoundItem {
@@ -35,12 +32,6 @@ public class ItemBoundShield extends ItemShield implements IBoundItem {
 	@Override
 	public float maintainCost(EntityPlayer player, ItemStack stack) {
 		return normalMaintain;
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public String getItemStackDisplayName(ItemStack stack) {
-		return I18n.format("item." + getRegistryName().toString() + ".name");
 	}
 
 	public ItemBoundShield registerAndName(String name) {

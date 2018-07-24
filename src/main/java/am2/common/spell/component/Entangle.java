@@ -1,12 +1,10 @@
 package am2.common.spell.component;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import am2.ArsMagica2;
 import am2.api.affinity.Affinity;
 import am2.api.blocks.IMultiblock;
 import am2.api.rituals.IRitualInteraction;
@@ -15,8 +13,6 @@ import am2.api.spell.Operation;
 import am2.api.spell.SpellComponent;
 import am2.api.spell.SpellData;
 import am2.api.spell.SpellModifiers;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleApproachEntity;
 import am2.common.buffs.BuffEffectEntangled;
 import am2.common.defs.ItemDefs;
 import am2.common.defs.PotionEffectsDefs;
@@ -30,8 +26,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Entangle extends SpellComponent implements IRitualInteraction{
 
@@ -69,23 +63,7 @@ public class Entangle extends SpellComponent implements IRitualInteraction{
 	}
 
 
-	@Override
-	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier){
-		for (int i = 0; i < 25; ++i){
-			AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, "plant", x, y, z);
-			if (particle != null){
-				particle.addRandomOffset(1, 2, 1);
-				particle.AddParticleController(new ParticleApproachEntity(particle, target, 0.15f, 0.4f, 1, false));
-				particle.setMaxAge(20);
-				particle.setParticleScale(0.1f);
-				if (colorModifier > -1){
-					particle.setRGBColorF(((colorModifier >> 16) & 0xFF) / 255.0f, ((colorModifier >> 8) & 0xFF) / 255.0f, (colorModifier & 0xFF) / 255.0f);
-				}
-			}
-		}
-	}
-
-	@Override
+    @Override
 	public Set<Affinity> getAffinity(){
 		return Sets.newHashSet(Affinity.NATURE);
 	}
@@ -135,9 +113,4 @@ public class Entangle extends SpellComponent implements IRitualInteraction{
 		return false;
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public ItemStack getResult() {
-		return null;
-	}
 }

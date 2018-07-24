@@ -8,9 +8,6 @@ import am2.api.event.SpellRecipeItemsEvent;
 import am2.api.extensions.ISpellCaster;
 import am2.api.skill.Skill;
 import am2.api.spell.*;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
-import am2.client.particles.ParticleHoldPosition;
 import am2.common.LogHelper;
 import am2.common.blocks.BlockInscriptionTable;
 import am2.common.container.ContainerInscriptionTable;
@@ -196,108 +193,12 @@ public class TileEntityInscriptionTable extends TileEntity implements IInventory
 			if (shouldSet)
 				this.worldObj.setBlockState(this.pos, this.worldObj.getBlockState(this.pos).withProperty(BlockInscriptionTable.TIER_1, this.getUpgradeState() >= 1).withProperty(BlockInscriptionTable.TIER_2, this.getUpgradeState() >= 2).withProperty(BlockInscriptionTable.TIER_3, this.getUpgradeState() >= 3), 2);
 		//}
-		if (this.worldObj.isRemote && this.getUpgradeState() >= 3)
-			this.candleUpdate();
 		this.markDirty();
 		//worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 3);
 	}
 
 	public int getUpgradeState(){
 		return this.numStageGroups - 2;
-	}
-
-	@SuppressWarnings("incomplete-switch")
-	private void candleUpdate(){
-		if (--this.ticksToNextParticle < 0)
-			this.ticksToNextParticle = 0;
-
-		if (this.isRenderingLeft()){
-			if (this.ticksToNextParticle == 0 || this.ticksToNextParticle == 15) {
-
-				double particleX = 0;
-				double particleZ = 0;
-
-				switch (this.worldObj.getBlockState(this.pos).getValue(BlockInscriptionTable.FACING)){
-				case SOUTH:
-					particleX = this.getPos().getX() + 0.85;
-					particleZ = this.getPos().getZ() + 0.22;
-					break;
-				case NORTH:
-					particleX = this.getPos().getX() + 0.15;
-					particleZ = this.getPos().getZ() + 0.78;
-					break;
-				case WEST:
-					particleX = this.getPos().getX() + 0.78;
-					particleZ = this.getPos().getZ() + 0.85;
-					break;
-				case EAST:
-					particleX = this.getPos().getX() + 0.22;
-					particleZ = this.getPos().getZ() + 0.15;
-					break;
-				}
-
-				this.ticksToNextParticle = 30;
-				AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(this.worldObj, "fire_hand", particleX, this.getPos().getY() + 1.32, particleZ);
-				if (effect != null){
-					effect.setParticleScale(0.025f, 0.1f, 0.025f);
-					effect.AddParticleController(new ParticleHoldPosition(effect, 29, 1, false));
-					effect.setIgnoreMaxAge(false);
-					effect.setMaxAge(400);
-				}
-
-				if (this.worldObj.rand.nextInt(100) > 80){
-					AMParticle smoke = (AMParticle)ArsMagica2.proxy.particleManager.spawn(this.worldObj, "smoke", particleX, this.getPos().getY() + 1.4, particleZ);
-					if (smoke != null){
-						smoke.setParticleScale(0.025f);
-						smoke.AddParticleController(new ParticleFloatUpward(smoke, 0.01f, 0.01f, 1, false));
-						smoke.setIgnoreMaxAge(false);
-						smoke.setMaxAge(20 + this.worldObj.rand.nextInt(10));
-					}
-				}
-			}
-			if (this.ticksToNextParticle == 10 || this.ticksToNextParticle == 25){
-				double particleX = 0;
-				double particleZ = 0;
-
-				switch (this.worldObj.getBlockState(this.pos).getValue(BlockInscriptionTable.FACING)){
-				case SOUTH:
-					particleX = this.getPos().getX() + 0.41;
-					particleZ = this.getPos().getZ() - 0.72;
-					break;
-				case NORTH:
-					particleX = this.getPos().getX() + 0.59;
-					particleZ = this.getPos().getZ() + 1.72;
-					break;
-				case EAST:
-					particleX = this.getPos().getX() - 0.72;
-					particleZ = this.getPos().getZ() + 0.59;
-					break;
-				case WEST:
-					particleX = this.getPos().getX() + 1.72;
-					particleZ = this.getPos().getZ() + 0.41;
-					break;
-				}
-
-				AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(this.worldObj, "fire_hand", particleX, this.getPos().getY() + 1.26, particleZ);
-				if (effect != null){
-					effect.setParticleScale(0.025f, 0.1f, 0.025f);
-					effect.AddParticleController(new ParticleHoldPosition(effect, 29, 1, false));
-					effect.setIgnoreMaxAge(false);
-					effect.setMaxAge(400);
-				}
-
-				if (this.worldObj.rand.nextInt(100) > 80){
-					AMParticle smoke = (AMParticle)ArsMagica2.proxy.particleManager.spawn(this.worldObj, "smoke", particleX, this.getPos().getY() + 1.4, particleZ);
-					if (smoke != null){
-						smoke.setParticleScale(0.025f);
-						smoke.AddParticleController(new ParticleFloatUpward(smoke, 0.01f, 0.01f, 1, false));
-						smoke.setIgnoreMaxAge(false);
-						smoke.setMaxAge(20 + this.worldObj.rand.nextInt(10));
-					}
-				}
-			}
-
-		}
 	}
 
 	@Override

@@ -1,10 +1,6 @@
 package am2.common.entity;
 
-import am2.ArsMagica2;
 import am2.api.math.AMVector3;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFadeOut;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.defs.ItemDefs;
 import am2.common.entity.ai.EntityAIChestDeposit;
 import am2.common.entity.ai.EntityAIPickup;
@@ -80,17 +76,6 @@ public class EntityBroom extends EntityCreature{
 
 	@Override
 	public void onUpdate(){
-		if (worldObj.isRemote){
-			updateRotations();
-			if (isMoving()){
-				AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "smoke", posX, posY, posZ);
-				if (particle != null){
-					particle.addRandomOffset(0.5, 0.5, 0.5);
-					particle.setRGBColorF(0.8f, 0.6f, 0.4f);
-					particle.AddParticleController(new ParticleFadeOut(particle, 1, false).setFadeSpeed(0.03f).setKillParticleOnFinish(true));
-				}
-			}
-		}
 		super.onUpdate();
 	}
 
@@ -176,20 +161,9 @@ public class EntityBroom extends EntityCreature{
 	@Override
 	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, ItemStack stack, EnumHand hand){
 		if (player.getHeldItemMainhand() != null && player.getHeldItemMainhand().getItem() == ItemDefs.spellStaffMagitech){
-			if (this.worldObj.isRemote){
-				for (int i = 0; i < ArsMagica2.config.getGFXLevel() * 2; ++i){
-					AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "smoke", posX, posY, posZ);
-					if (particle != null){
-						particle.AddParticleController(new ParticleFloatUpward(particle, 0.1f, 0.3f, 1, false));
-						particle.addRandomOffset(0.3, 1, 0.3);
-						particle.setMaxAge(10);
-					}
-				}
-			}else{
-				this.entityDropItem(new ItemStack(ItemDefs.magicBroom), 0);
-				dropInventoryItems();
-				this.setDead();
-			}
+			this.entityDropItem(new ItemStack(ItemDefs.magicBroom), 0);
+			dropInventoryItems();
+			this.setDead();
 			return EnumActionResult.SUCCESS;
 		}
 		return EnumActionResult.PASS;

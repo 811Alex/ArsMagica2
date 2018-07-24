@@ -1,12 +1,10 @@
 package am2.common.spell.component;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.affinity.Affinity;
 import am2.api.blocks.IMultiblock;
@@ -15,8 +13,6 @@ import am2.api.rituals.RitualShapeHelper;
 import am2.api.spell.SpellComponent;
 import am2.api.spell.SpellData;
 import am2.api.spell.SpellModifiers;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.defs.ItemDefs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,8 +24,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BanishRain extends SpellComponent implements IRitualInteraction{
 
@@ -86,22 +80,7 @@ public class BanishRain extends SpellComponent implements IRitualInteraction{
 		return new ItemStack[]{new ItemStack(ItemDefs.essence, 1, waterMeta)};
 	}
 
-	@Override
-	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier){
-		for (int i = 0; i < 25; ++i){
-			AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, "water_ball", x, y, z);
-			if (particle != null){
-				particle.addRandomOffset(5, 4, 5);
-				particle.AddParticleController(new ParticleFloatUpward(particle, 0f, 0.5f, 1, false));
-				particle.setMaxAge(25 + rand.nextInt(10));
-				if (colorModifier > -1){
-					particle.setRGBColorF(((colorModifier >> 16) & 0xFF) / 255.0f, ((colorModifier >> 8) & 0xFF) / 255.0f, (colorModifier & 0xFF) / 255.0f);
-				}
-			}
-		}
-	}
-
-	@Override
+    @Override
 	public Set<Affinity> getAffinity(){
 		return Sets.newHashSet(Affinity.WATER);
 	}
@@ -143,9 +122,4 @@ public class BanishRain extends SpellComponent implements IRitualInteraction{
 		
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public ItemStack getResult() {
-		return null;
-	}
 }

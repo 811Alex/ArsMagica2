@@ -9,11 +9,9 @@ import am2.api.extensions.ISpellCaster;
 import am2.api.spell.Operation;
 import am2.api.spell.SpellModifiers;
 import am2.common.defs.IDDefs;
-import am2.common.extensions.SkillData;
 import am2.common.spell.SpellCaster;
 import am2.common.utils.EntityUtils;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,8 +28,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SpellBase extends ItemSpellBase{
 	public SpellBase(){
@@ -59,16 +55,6 @@ public class SpellBase extends ItemSpellBase{
 	public String getItemStackDisplayName(ItemStack par1ItemStack){
 		if (par1ItemStack.getTagCompound() == null) return "\247bMalformed Spell";
 		return "Unnamed Spell";
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> list, boolean par4){
-		if (!stack.hasTagCompound()) return;
-		
-		ISpellCaster caster = stack.getCapability(SpellCaster.INSTANCE, null);
-
-		list.add("Mana Cost : " + caster.getManaCost(player.getEntityWorld(), player));
 	}
 
 	@Override
@@ -150,22 +136,6 @@ public class SpellBase extends ItemSpellBase{
 	
 	@Override
 	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void onUpdate(ItemStack stack, World world, Entity entity, int par4, boolean par5){
-		super.onUpdate(stack, world, entity, par4, par5);
-		if (entity instanceof EntityPlayerSP && ((EntityPlayerSP)entity).getActiveHand() != null){
-			EntityPlayerSP player = (EntityPlayerSP)entity;
-			ItemStack usingItem = player.getActiveItemStack();
-			if (usingItem != null && usingItem.getItem() == this){
-				if (SkillData.For(player).hasSkill("spellMovement")){
-					player.movementInput.moveForward *= 2.5F;
-					player.movementInput.moveStrafe *= 2.5F;
-				}
-			}
-		}
 	}
 
 	@Override

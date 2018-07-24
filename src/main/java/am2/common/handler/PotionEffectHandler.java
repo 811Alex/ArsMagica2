@@ -2,8 +2,6 @@ package am2.common.handler;
 
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.GL11;
-
 import am2.api.event.PotionEvent.EventPotionAdded;
 import am2.api.event.PotionEvent.EventPotionLoaded;
 import am2.api.event.SpellCastEvent;
@@ -11,23 +9,17 @@ import am2.common.blocks.tileentity.TileEntityAstralBarrier;
 import am2.common.buffs.BuffEffect;
 import am2.common.buffs.BuffEffectTemporalAnchor;
 import am2.common.buffs.BuffStatModifiers;
-import am2.common.defs.ItemDefs;
 import am2.common.defs.PotionEffectsDefs;
 import am2.common.extensions.EntityExtension;
 import am2.common.utils.DimensionUtilities;
 import am2.common.utils.KeystoneUtilities;
-import am2.common.utils.SelectionUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityMinecart;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -37,8 +29,6 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 
 public class PotionEffectHandler {
@@ -194,27 +184,6 @@ public class PotionEffectHandler {
 				blockingBarrier.onEntityBlocked(e.getEntityLiving());
 			}
 			return;
-		}
-	}
-	
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void playerRender(RenderPlayerEvent.Pre e) {
-		if (e.getEntityLiving().isPotionActive(PotionEffectsDefs.TRUE_SIGHT)) {
-			GL11.glPushMatrix();
-			GL11.glRotated(e.getEntityPlayer().rotationYawHead, 0, -1, 0);
-			int[] runes = SelectionUtils.getRuneSet(e.getEntityPlayer());
-			int numRunes = runes.length;
-			double start = ((double)numRunes - 1) / 8D;
-			GL11.glTranslated(-start, 2.2, 0);
-			for (int rune : runes) {
-				GL11.glPushMatrix();
-				GL11.glScaled(0.25, 0.25, 0.25);
-				Minecraft.getMinecraft().getItemRenderer().renderItem(e.getEntityPlayer(), new ItemStack(ItemDefs.rune, 1, rune), TransformType.GUI);
-				GL11.glPopMatrix();
-				GL11.glTranslated(0.25, 0, 0);			
-			}
-			GL11.glPopMatrix();
 		}
 	}
 }

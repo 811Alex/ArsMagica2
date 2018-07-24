@@ -1,18 +1,14 @@
 package am2.common.spell.component;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import am2.ArsMagica2;
 import am2.api.affinity.Affinity;
 import am2.api.spell.SpellComponent;
 import am2.api.spell.SpellData;
 import am2.api.spell.SpellModifiers;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleConverge;
 import am2.common.defs.ItemDefs;
 import am2.common.extensions.EntityExtension;
 import net.minecraft.entity.Entity;
@@ -70,29 +66,6 @@ public class Mark extends SpellComponent{
 	@Override
 	public ItemStack[] reagents(EntityLivingBase caster){
 		return null;
-	}
-
-	@Override
-	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier){
-		int offset = 1;
-
-		SetupParticle(world, caster.posX - 0.5f, caster.posY + offset, caster.posZ, 0.2, 0, colorModifier);
-		SetupParticle(world, caster.posX + 0.5f, caster.posY + offset, caster.posZ, -0.2, 0, colorModifier);
-		SetupParticle(world, caster.posX, caster.posY + offset, caster.posZ - 0.5f, 0, 0.2, colorModifier);
-		SetupParticle(world, caster.posX, caster.posY + offset, caster.posZ + 0.5f, 0, -0.2, colorModifier);
-	}
-
-	private void SetupParticle(World world, double x, double y, double z, double motionx, double motionz, int colorModifier){
-		AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, "symbols", x, y, z);
-		if (effect != null){
-			effect.AddParticleController(new ParticleConverge(effect, motionx, -0.1, motionz, 1, true));
-			effect.setMaxAge(40);
-			effect.setIgnoreMaxAge(false);
-			effect.setParticleScale(0.1f);
-			if (colorModifier > -1){
-				effect.setRGBColorF(((colorModifier >> 16) & 0xFF) / 255.0f, ((colorModifier >> 8) & 0xFF) / 255.0f, (colorModifier & 0xFF) / 255.0f);
-			}
-		}
 	}
 
 	@Override

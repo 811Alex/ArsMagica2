@@ -6,8 +6,6 @@ import java.util.Random;
 import am2.ArsMagica2;
 import am2.api.DamageSources;
 import am2.api.math.AMVector3;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.blocks.BlockArsMagicaBlock.EnumBlockType;
 import am2.common.bosses.BossSpawnHelper;
 import am2.common.defs.BlockDefs;
@@ -81,24 +79,6 @@ public class BlockInlay extends BlockRailBase {
 
 	public IProperty<BlockRailBase.EnumRailDirection> getShapeProperty() {
 		return SHAPE;
-	}
-	
-	@Override
-	public void randomDisplayTick(IBlockState stateIn, World world, BlockPos pos, Random rand) {
-		if (world.isRemote && world.getBlockState(pos.down()).getBlock().isAir(world.getBlockState(pos.down()), world, pos.down()) && ArsMagica2.config.FullGFX() && rand.nextInt(10) < 8){
-			AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, ArsMagica2.config.FullGFX() ? "radiant" : "sparkle2", pos.getX() + rand.nextFloat(), pos.getY(), pos.getZ() + rand.nextFloat());
-			if (particle != null){
-				particle.setMaxAge(20);
-				particle.setParticleScale(ArsMagica2.config.FullGFX() ? 0.015f : 0.15f);
-				particle.AddParticleController(new ParticleFloatUpward(particle, 0.01f, -0.025f, 1, false));
-				if (this == BlockDefs.redstoneInlay)
-					particle.setRGBColorF(1.0f, 0.4f, 0.4f);
-				else if (this == BlockDefs.ironInlay)
-					particle.setRGBColorF(1.0f, 1.0f, 1.0f);
-				else if (this == BlockDefs.goldInlay)
-					particle.setRGBColorF(1.0f, 1.0f, 0.2f);
-			}
-		}
 	}
 	
 	@Override

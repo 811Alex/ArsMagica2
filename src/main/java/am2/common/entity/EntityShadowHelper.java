@@ -2,15 +2,9 @@ package am2.common.entity;
 
 import com.google.common.base.Optional;
 
-import am2.ArsMagica2;
 import am2.api.math.AMVector3;
-import am2.client.ShadowSkinHelper;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.blocks.tileentity.TileEntityCraftingAltar;
-import am2.common.defs.AMSounds;
 import am2.common.entity.ai.EntityAISpellmaking;
-import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIOpenDoor;
 import net.minecraft.entity.ai.EntityAISwimming;
@@ -20,12 +14,8 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityShadowHelper extends EntityLiving{
 
@@ -42,9 +32,6 @@ public class EntityShadowHelper extends EntityLiving{
 	private TileEntityCraftingAltar altarTarget = null;
 	private String lastDWString = "";
 
-	@SideOnly(Side.CLIENT)
-	private ShadowSkinHelper skinHelper;
-
 	public EntityShadowHelper(World world){
 		super(world);
 		initAI();
@@ -53,24 +40,6 @@ public class EntityShadowHelper extends EntityLiving{
 	@Override
 	public void onDeath(DamageSource par1DamageSource){
 		super.onDeath(par1DamageSource);
-		if (worldObj.isRemote){
-			spawnParticles();
-			worldObj.playSound(posX, posY, posZ, AMSounds.CRAFTING_ALTAR_CREATE_SPELL, SoundCategory.NEUTRAL, 1.0f, 1.0f, true);
-		}
-	}
-
-	private void spawnParticles(){
-		if (worldObj.isRemote){
-			for (int i = 0; i < 25 * ArsMagica2.config.getGFXLevel() + 1; ++i){
-				AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "arcane", posX, posY, posZ);
-				if (particle != null){
-					particle.addRandomOffset(1, 1, 1);
-					particle.AddParticleController(new ParticleFloatUpward(particle, 0, 0.02f + getRNG().nextFloat() * 0.2f, 1, false));
-					particle.setIgnoreMaxAge(false);
-					particle.setMaxAge(20 + getRNG().nextInt(20));
-				}
-			}
-		}
 	}
 
 	@Override
@@ -166,17 +135,6 @@ public class EntityShadowHelper extends EntityLiving{
 	@Override
 	public void onUpdate(){
 		super.onUpdate();
-		if (worldObj != null && worldObj.isRemote && skinHelper == null) {
-			this.skinHelper = new ShadowSkinHelper();
-			spawnParticles();
-		}
-		
-		if (this.worldObj.isRemote){
-			if (this.getMimicUser() != lastDWString){
-				lastDWString = getMimicUser();
-				this.skinHelper.setupCustomSkin(lastDWString);
-			}
-		}
 		if (!worldObj.isRemote && (altarTarget == null || !altarTarget.isCrafting())){
 			this.unSummon();
 		}
@@ -189,13 +147,5 @@ public class EntityShadowHelper extends EntityLiving{
 
 	public void unSummon(){
 		this.attackEntityFrom(DamageSource.generic, 5000);
-	}
-
-	public ResourceLocation getLocationSkin(){
-		return this.skinHelper.getLocationSkin();
-	}
-
-	public ThreadDownloadImageData getTextureSkin(){
-		return this.skinHelper.getTextureSkin();
 	}
 }

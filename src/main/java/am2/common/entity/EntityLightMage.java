@@ -38,8 +38,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityLightMage extends EntityCreature{
 
@@ -248,8 +246,4 @@ public class EntityLightMage extends EntityCreature{
 		return EnumActionResult.SUCCESS;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public String getTexture(){
-		return String.format("arsmagica2:textures/mobs/light_mages/light_mage_%d.png", this.dataManager.get(MAGE_SKIN).intValue());
-	}
 }

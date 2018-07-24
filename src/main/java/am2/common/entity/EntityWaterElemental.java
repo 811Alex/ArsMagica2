@@ -1,11 +1,7 @@
 package am2.common.entity;
 
-import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.affinity.Affinity;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFadeOut;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.defs.ItemDefs;
 import am2.common.entity.ai.EntityAIWaterElementalAttack;
 import am2.common.extensions.EntityExtension;
@@ -44,34 +40,12 @@ public class EntityWaterElemental extends EntityMob{
 
 	@Override
 	public void onUpdate(){
-		if (this.worldObj != null){
-			if (this.worldObj.isRemote){
-				spawnLivingParticles();
-			}
-		}
 		super.onUpdate();
 	}
 	
 	@Override
 	protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
 		this.entityDropItem(new ItemStack(ItemDefs.essence, 1, ArsMagicaAPI.getAffinityRegistry().getId(Affinity.WATER)), 0.0f);
-	}
-
-	private void spawnLivingParticles(){
-		if (rand.nextBoolean()){
-			double yPos = this.posY + 1.1;
-			AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "water_ball",
-					this.posX + ((rand.nextFloat() * 0.2) - 0.1f),
-					yPos,
-					this.posZ + ((rand.nextFloat() * 0.4) - 0.2f));
-			if (effect != null){
-				effect.AddParticleController(new ParticleFloatUpward(effect, 0.1f, -0.06f, 1, false));
-				effect.AddParticleController(new ParticleFadeOut(effect, 2, false).setFadeSpeed(0.04f));
-				effect.setMaxAge(25);
-				effect.setIgnoreMaxAge(false);
-				effect.setParticleScale(0.1f);
-			}
-		}
 	}
 
 	/* Checks if this entity is inside water (if inWater field is true as a result of handleWaterMovement() returning

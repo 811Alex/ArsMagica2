@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.Random;
 
 import am2.ArsMagica2;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
-import am2.client.particles.ParticleGrow;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -63,19 +60,6 @@ public class BlockMageLight extends BlockAMSpecialRender {
 			case MAGENTA: color = 0xB24CD8;break;
 			case ORANGE: color = 0xD87F33;break;
 			default: color = 0xFFFFFF;break;
-		}
-	}
-	
-	@Override
-	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-		AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldIn, "sparkle", pos.getX() + 0.5 + (rand.nextDouble() * 0.2f - 0.1f), pos.getY() + 0.5, pos.getZ() + 0.5 + (rand.nextDouble() * 0.2f - 0.1f));
-		if (particle != null){
-			particle.setIgnoreMaxAge(false);
-			particle.setMaxAge(10 + rand.nextInt(20));
-			particle.AddParticleController(new ParticleFloatUpward(particle, 0f, -0.01f, 1, false));
-			particle.AddParticleController(new ParticleGrow(particle, -0.005f, 1, false));
-			getRGBcolor(stateIn.getValue(COLOR));
-			particle.setRGBColorI(color);
 		}
 	}
 	

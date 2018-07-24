@@ -42,18 +42,8 @@ public abstract class AbstractAffinityAbility extends IForgeRegistryEntry.Impl<A
 	 * @return the ability that is required.
 	 */
 	public abstract Affinity getAffinity();
-	
-	/**
-	 * If this Affinity Ability uses a key binding, return it, otherwise just return null
-	 * 
-	 * @return the key binding that this ability uses, or null.
-	 */
-	@Nullable
-	public KeyBinding getKey() {
-		return null;
-	}
-	
-	/**
+
+    /**
 	 * Checks if the player can use this ability. Most of the time you won't need change this unless you are using toggle {@link KeyBinding}s, in that case consider using {@link AbstractToggledAffinityAbility}.
 	 * 
 	 * @param player : the current player.

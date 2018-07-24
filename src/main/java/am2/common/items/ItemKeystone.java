@@ -1,7 +1,5 @@
 package am2.common.items;
 
-import java.util.List;
-
 import am2.ArsMagica2;
 import am2.common.container.InventoryKeyStone;
 import am2.common.defs.IDDefs;
@@ -13,11 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemKeystone extends ItemArsMagica{
 
@@ -159,27 +154,6 @@ public class ItemKeystone extends ItemArsMagica{
 	@Override
 	public boolean getShareTag(){
 		return true;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List<String> par3List, boolean par4){
-		ItemStack[] items = getMyInventory(par1ItemStack);
-
-		String s = I18n.format("am2.tooltip.open");
-		par3List.add((new StringBuilder()).append("\2477").append(s).toString());
-
-		if (items.length > 0){
-			s = I18n.format("am2.tooltip.runes") + ": ";
-			par3List.add((new StringBuilder()).append("\2477").append(s).toString());
-			s = "";
-			for (int i = 0; i < KEYSTONE_INVENTORY_SIZE; ++i){
-				if (items[i] == null) continue;
-				s += items[i].getDisplayName().replace("Rune", "").trim() + " ";
-			}
-			if (s == "") s = I18n.format("am2.tooltip.none");
-			par3List.add((new StringBuilder()).append("\2477").append(s).toString());
-		}
 	}
 
 	public long getKey(ItemStack keystoneStack){

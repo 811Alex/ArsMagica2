@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import am2.ArsMagica2;
-import am2.client.particles.AMParticle;
 import am2.common.blocks.BlockEverstone;
 import am2.common.defs.BlockDefs;
 import net.minecraft.block.Block;
@@ -50,15 +49,6 @@ public class TileEntityEverstone extends TileEntity implements ITickable{
 		completedUpdates.add(myPosition);
 		poweredFromEverstone = powered;
 		onBreak();
-
-		if (worldObj.isRemote){
-			AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "radiant", pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f);
-			if (particle != null){
-				particle.setMaxAge(20);
-				particle.setDontRequireControllers();
-				particle.setIgnoreMaxAge(false);
-			}
-		}
 
 		for (int i = -1; i <= 1; i++){
 			for (int j = -1; j <= 1; j++){

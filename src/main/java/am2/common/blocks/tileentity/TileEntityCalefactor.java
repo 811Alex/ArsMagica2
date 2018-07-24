@@ -1,10 +1,7 @@
 package am2.common.blocks.tileentity;
 
 
-import am2.ArsMagica2;
 import am2.api.blocks.IKeystoneLockable;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.blocks.BlockCalefactor;
 import am2.common.defs.AMSounds;
 import am2.common.defs.ItemDefs;
@@ -245,45 +242,6 @@ public class TileEntityCalefactor extends TileEntityAMPower implements IInventor
 			rotationStepX = worldObj.rand.nextFloat() * 0.03f - 0.015f;
 			isFirstTick = false;
 		}
-		if (this.worldObj.isRemote){
-			incrementRotations();
-			if (this.isCooking){
-				particleCount--;
-				if (particleCount <= 0){
-					particleCount = (int)(Math.random() * 20);
-					double rStartX = Math.random() > 0.5 ? this.pos.getX() + 0.01 : this.pos.getX() + 1.01;
-					double rStartY = this.pos.getY() + 1.1;
-					double rStartZ = Math.random() > 0.5 ? this.pos.getZ() + 0.01 : this.pos.getZ() + 1.01;
-
-					double endX = this.pos.getX() + 0.5f;
-					double endY = this.pos.getY() + 0.7f + (worldObj.rand.nextDouble() * 0.5f);
-					double endZ = this.pos.getZ() + 0.5f;
-
-					ArsMagica2.proxy.particleManager.BeamFromPointToPoint(worldObj, rStartX, rStartY, rStartZ, endX, endY, endZ, 0xFF8811);
-					if (worldObj.rand.nextBoolean()){
-						AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "smoke", endX, endY, endZ);
-						if (effect != null){
-							effect.setIgnoreMaxAge(false);
-							effect.setMaxAge(60);
-							effect.AddParticleController(new ParticleFloatUpward(effect, 0.02f, 0.01f, 1, false));
-						}
-					}else{
-						AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "explosion_2", endX, endY, endZ);
-						if (effect != null){
-							effect.setIgnoreMaxAge(false);
-							effect.setMaxAge(10);
-							effect.setParticleScale(0.04f);
-							effect.addVelocity(worldObj.rand.nextDouble() * 0.2f - 0.1f, 0.2f, worldObj.rand.nextDouble() * 0.2f - 0.1f);
-							effect.setAffectedByGravity();
-							effect.setDontRequireControllers();
-						}
-					}
-				}
-			}else{
-				particleCount = 0;
-			}
-		}
-		
 		boolean powerCheck = PowerNodeRegistry.For(this.worldObj).checkPower(this, getCookTickPowerCost());
 		if (this.canSmelt() && this.isSmelting() && powerCheck){
 			++this.timeSpentCooking;

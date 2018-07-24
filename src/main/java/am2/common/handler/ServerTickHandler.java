@@ -99,16 +99,6 @@ public class ServerTickHandler{
 		ArsMagica2.proxy.clearDeferredDimensionTransfers();
 	}
 
-//	private void applyDeferredTargetSets(){
-//		Iterator<Entry<EntityLiving, EntityLivingBase>> it = targetsToSet.entrySet().iterator();
-//		while (it.hasNext()){
-//			Entry<EntityLiving, EntityLivingBase> entry = it.next();
-//			if (entry.getKey() != null && !entry.getKey().isDead)
-//				entry.getKey().setAttackTarget(entry.getValue());
-//			it.remove();
-//		}
-//	}
-
 	public void addDeferredTarget(EntityLiving ent, EntityLivingBase target){
 		targetsToSet.put(ent, target);
 	}

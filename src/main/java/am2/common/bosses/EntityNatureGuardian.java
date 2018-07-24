@@ -1,14 +1,10 @@
 package am2.common.bosses;
 
-import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.DamageSources;
 import am2.api.affinity.Affinity;
 import am2.api.sources.DamageSourceFire;
 import am2.api.sources.DamageSourceFrost;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
-import am2.client.particles.ParticleOrbitEntity;
 import am2.common.bosses.ai.EntityAICastSpell;
 import am2.common.bosses.ai.EntityAIPlantGuardianThrowSickle;
 import am2.common.bosses.ai.EntityAIShieldBash;
@@ -72,28 +68,12 @@ public class EntityNatureGuardian extends AM2Boss{
 
 	@Override
 	public void onUpdate(){
-		if (worldObj.isRemote){
-			updateMovementAngles();
-			spawnParticles();
-		}
 		super.onUpdate();
 	}
 
 	@Override
 	public int getTotalArmorValue(){
 		return 20;
-	}
-
-	private void spawnParticles(){
-		AMParticle leaf = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "leaf", posX + (rand.nextDouble() * 3) - 1.5f, posY + (rand.nextDouble() * 5f), posZ + (rand.nextDouble() * 3) - 1.5f);
-		if (leaf != null){
-			leaf.setMaxAge(20);
-			leaf.setIgnoreMaxAge(false);
-			leaf.AddParticleController(new ParticleFloatUpward(leaf, 0.05f, -0.02f, 1, false));
-			if (getCurrentAction() == BossActions.SPINNING){
-				leaf.AddParticleController(new ParticleOrbitEntity(leaf, this, 0.6f, 1, false));
-			}
-		}
 	}
 
 	@Override

@@ -5,11 +5,6 @@ import java.util.HashMap;
 
 import am2.api.blocks.IKeystoneLockable;
 import am2.api.math.AMVector3;
-import am2.client.blocks.colorizers.CrystalMarkerColorizer;
-import am2.client.blocks.colorizers.FlickerHabitatColorizer;
-import am2.client.blocks.colorizers.ManaBatteryColorizer;
-import am2.client.blocks.colorizers.MonoColorizer;
-import am2.client.items.rendering.IgnoreMetadataRenderer;
 import am2.common.blocks.BlockAM;
 import am2.common.blocks.BlockAMFlower;
 import am2.common.blocks.BlockArcaneDeconstructor;
@@ -72,31 +67,18 @@ import am2.common.utils.KeystoneUtilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.StateMap;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemSlab;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockDefs {
 	
@@ -180,131 +162,7 @@ public class BlockDefs {
 		GameRegistry.register(witchwoodDoubleSlab, new ResourceLocation("arsmagica2:witchwood_slab_double"));
 		GameRegistry.register(new ItemSlab(witchwoodSingleSlab, witchwoodSingleSlab, witchwoodDoubleSlab), new ResourceLocation("arsmagica2:witchwood_slab"));
 	}
-	
-	@SideOnly(Side.CLIENT)
-	public void preInitClient() {
-		Block blockliquid_essence = GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation("arsmagica2:liquid_essence"));
-		Item itemliquid_essence = GameRegistry.findRegistry(Item.class).getValue(new ResourceLocation("arsmagica2:liquid_essence"));
-		ModelBakery.registerItemVariants(itemliquid_essence, new ModelResourceLocation(new ResourceLocation("arsmagica2:liquid_essence"), liquid_essence.getName()));
-		ModelLoader.setCustomMeshDefinition(itemliquid_essence, stack -> new ModelResourceLocation(new ResourceLocation("arsmagica2:liquid_essence"), liquid_essence.getName()));
-		
-		ModelLoader.setCustomStateMapper(iceEffigy, new StateMap.Builder().ignore(BlockEffigy.PROGRESS).build());
-		ModelLoader.setCustomStateMapper(lightningEffigy, new StateMap.Builder().ignore(BlockEffigy.PROGRESS).build());
-		
-		ModelLoader.setCustomStateMapper(blockliquid_essence, new StateMapperBase() {
-			
-			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-				return new ModelResourceLocation(new ResourceLocation("arsmagica2:liquid_essence"), liquid_essence.getName());
-			}
-		});
-	}
-	
-	
-	@SideOnly(Side.CLIENT)
-	public static void initClient () {
-		IForgeRegistry<Item> items = GameRegistry.findRegistry(Item.class);
-		RenderItem renderer = Minecraft.getMinecraft().getRenderItem();
-		
-		//Utility Blocks
-		registerTexture(frost);
-		registerTexture(invisibleLight);
-		registerTexture(invisibleUtility);
-		registerTexture(blockMageLight);
-		
-		//Building Blocks
-		registerTexture(magicWall);
-		
-		//Power Blocks
-		registerTexture(obelisk);
-		registerTexture(celestialPrism);
-		registerTexture(blackAurem);
-		registerTexture(manaBattery);
-		registerTexture(armorImbuer);
-		registerTexture(slipstreamGenerator);
-		registerTexture(manaDrain);
-		
-		//Flickers
-		registerTexture(crystalMarker);
-		registerTexture(elementalAttuner);
-		registerTexture(flickerLure);
-		
-		//Ritual Blocks
-		registerTexture(wardingCandle);
-		registerTexture(wizardChalk);
-		
-		//Spell Blocks
-		registerTexture(occulus);
-		registerTexture(lectern);
-		registerTexture(craftingAltar);
-		registerTexture(inscriptionTable);
-		
-		//Flowers
-		registerTexture(aum);
-		registerTexture(cerublossom);
-		registerTexture(wakebloom);
-		registerTexture(tarmaRoot);
-		registerTexture(desertNova);
-		
-		registerTexture(keystoneRecepticle);
-		registerTexture(keystoneDoor);
-		registerTexture(keystoneChest);
-		registerTexture(keystoneTrapdoor);
-		
-		registerTexture(witchwoodLeaves);
-		registerTexture(witchwoodLog);
-		registerTexture(witchwoodSapling);
-		registerTexture(essenceConduit);
-		
-		registerTexture(arcaneDeconstructor);
-		registerTexture(arcaneReconstructor);
-		registerTexture(essenceRefiner);
-		registerTexture(everstone);
-		
-		registerTexture(illusionBlock);
-		registerTexture(seerStone);
-		registerTexture(brokenPowerLink);
-		registerTexture(calefactor);
-		registerTexture(inertSpawner);
-		registerTexture(magiciansWorkbench);
-		registerTexture(otherworldAura);
-		registerTexture(particleEmitter);
-		registerTexture(summoner);
-		registerTexture(iceEffigy);
-		registerTexture(lightningEffigy);
-		registerTexture(witchwoodStairs);
-		registerTexture(witchwoodPlanks);
-		registerTexture(witchwoodSingleSlab);
-		registerTexture(redstoneInlay);
-		registerTexture(goldInlay);
-		registerTexture(ironInlay);
-		registerTexture(astralBarrier);
-		registerTexture(vinteumTorch);
-		
-		Item ore = items.getValue(new ResourceLocation("arsmagica2:ore"));
-		Item block = items.getValue(new ResourceLocation("arsmagica2:block"));
-		
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new ManaBatteryColorizer(), manaBattery);
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new CrystalMarkerColorizer(), crystalMarker);
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new FlickerHabitatColorizer(), elementalAttuner);
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new MonoColorizer(0x00ffff), essenceConduit);
-		for (int i = 0; i < BlockArsMagicaOre.EnumOreType.values().length; i++) {
-			ModelResourceLocation blockLoc = new ModelResourceLocation("arsmagica2:block_" + BlockArsMagicaOre.EnumOreType.values()[i].getName(), "inventory");
-			ModelResourceLocation oreLoc = new ModelResourceLocation("arsmagica2:ore_" + BlockArsMagicaOre.EnumOreType.values()[i].getName(), "inventory");
-			ModelBakery.registerItemVariants(ore, oreLoc);
-			ModelBakery.registerItemVariants(block, blockLoc);
-			renderer.getItemModelMesher().register(ore, i, oreLoc);
-			renderer.getItemModelMesher().register(block, i, blockLoc);
-		}
-	}
-	
-	@SideOnly(Side.CLIENT)
-	private static void registerTexture(Block block) {
-		ResourceLocation loc = block.getRegistryName();
-		Item item = GameRegistry.findRegistry(Item.class).getValue(loc);
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, new IgnoreMetadataRenderer(new ModelResourceLocation(loc, "inventory")));
-	}
-	
+
 	public void registerKeystonePortal(BlockPos pos, int dimension){
 		AMVector3 location = new AMVector3(pos);
 		if (!KeystonePortalLocations.containsKey(dimension))

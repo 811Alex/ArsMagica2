@@ -36,8 +36,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.UniversalBucket;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityObelisk extends TileEntityAMPower implements IMultiblockController, IInventory, ITileEntityAMBase {
 	protected static int pillarBlockID = 98; //stone brick
@@ -288,12 +286,6 @@ public class TileEntityObelisk extends TileEntityAMPower implements IMultiblockC
 		}
 		markDirty();
 		super.update();
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox(){
-		return new AxisAlignedBB(pos.getX() - 1, pos.getY(), pos.getZ() - 1, pos.getX() + 2, pos.getY() + 0.3, pos.getZ() + 2);
 	}
 	
 	@Override

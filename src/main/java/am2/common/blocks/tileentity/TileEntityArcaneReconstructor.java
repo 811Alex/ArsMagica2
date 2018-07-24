@@ -1,12 +1,8 @@
 package am2.common.blocks.tileentity;
 
-import am2.ArsMagica2;
 import am2.api.blocks.IKeystoneLockable;
 import am2.api.event.ReconstructorRepairEvent;
 import am2.api.math.AMVector3;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFadeOut;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.defs.AMSounds;
 import am2.common.entity.EntityDummyCaster;
 import am2.common.items.ItemFocusCharge;
@@ -109,20 +105,6 @@ public class TileEntityArcaneReconstructor extends TileEntityAMPower implements 
 					worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
 			}
 		}
-		if (worldObj.isRemote){
-			updateRotations();
-			if (shouldRenderItemStack()){
-				AMParticle p = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "sparkle2", pos.getX() + 0.2 + (worldObj.rand.nextDouble() * 0.6), pos.getY() + 0.4, pos.getZ() + 0.2 + (worldObj.rand.nextDouble() * 0.6));
-				if (p != null){
-					p.AddParticleController(new ParticleFloatUpward(p, 0.0f, 0.02f, 1, false));
-					p.setIgnoreMaxAge(true);
-					p.setParticleScale(0.1f);
-					p.AddParticleController(new ParticleFadeOut(p, 1, false).setFadeSpeed(0.035f).setKillParticleOnFinish(true));
-					p.setRGBColorF(1, 0, 1);
-				}
-			}
-		}
-
 		super.update();
 	}
 

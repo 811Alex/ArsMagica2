@@ -1,12 +1,10 @@
 package am2.common.spell.component;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import am2.ArsMagica2;
 import am2.api.affinity.Affinity;
 import am2.api.blocks.IMultiblock;
 import am2.api.rituals.IRitualInteraction;
@@ -15,9 +13,6 @@ import am2.api.spell.Operation;
 import am2.api.spell.SpellComponent;
 import am2.api.spell.SpellData;
 import am2.api.spell.SpellModifiers;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
-import am2.client.particles.ParticleOrbitEntity;
 import am2.common.buffs.BuffEffectFury;
 import am2.common.defs.ItemDefs;
 import am2.common.defs.PotionEffectsDefs;
@@ -32,8 +27,6 @@ import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Fury extends SpellComponent implements IRitualInteraction{
 
@@ -92,21 +85,7 @@ public class Fury extends SpellComponent implements IRitualInteraction{
 		return null;
 	}
 
-	@Override
-	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier){
-		for (int i = 0; i < 5 * ArsMagica2.config.getGFXLevel(); ++i){
-			AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, "pulse", x, y, z);
-			if (particle != null){
-				particle.addRandomOffset(1, 1, 1);
-				particle.setRGBColorF(1, 0, 0);
-				particle.AddParticleController(new ParticleOrbitEntity(particle, target, 0.15f, 1, false).SetTargetDistance(world.rand.nextDouble() + 1f).setIgnoreYCoordinate(true));
-				particle.AddParticleController(new ParticleFloatUpward(particle, 0, 0.1f, 1, false));
-				particle.setMaxAge(10);
-			}
-		}
-	}
-
-	@Override
+    @Override
 	public Set<Affinity> getAffinity(){
 		return Sets.newHashSet(Affinity.FIRE, Affinity.LIGHTNING);
 	}
@@ -145,12 +124,6 @@ public class Fury extends SpellComponent implements IRitualInteraction{
 			double impactX, double impactY, double impactZ, EntityLivingBase caster) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public ItemStack getResult() {
-		return null;
 	}
 
 }

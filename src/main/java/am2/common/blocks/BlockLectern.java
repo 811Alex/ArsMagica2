@@ -1,18 +1,14 @@
 package am2.common.blocks;
 
-import am2.ArsMagica2;
 import am2.common.blocks.tileentity.TileEntityLectern;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -21,8 +17,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.GameType;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockLectern extends BlockAMSpecialRenderContainer{
 
@@ -62,10 +56,7 @@ public class BlockLectern extends BlockAMSpecialRenderContainer{
 					te.setStack(null);
 				}
 			}else{
-				if (te.getStack().getItem() == Items.WRITTEN_BOOK && world.isRemote && player == ArsMagica2.proxy.getLocalPlayer())
-					openBook(player, te);
-				else
-					te.getStack().getItem().onItemRightClick(te.getStack(), world, player, hand);
+				te.getStack().getItem().onItemRightClick(te.getStack(), world, player, hand);
 				return true;
 			}
 		}else{
@@ -81,12 +72,7 @@ public class BlockLectern extends BlockAMSpecialRenderContainer{
 		
 		return true;
 	}
-	
-	@SideOnly(Side.CLIENT)
-	private void openBook(EntityPlayer player, TileEntityLectern te) {
-		Minecraft.getMinecraft().displayGuiScreen(new GuiScreenBook(player, te.getStack(), false));
-	}
-	
+
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		TileEntityLectern te = getTileEntity(world, pos);

@@ -1,21 +1,16 @@
 package am2.common.items;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import am2.common.enchantments.AMEnchantments;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemHellCowHorn extends ItemArsMagica{
 
@@ -46,23 +41,5 @@ public class ItemHellCowHorn extends ItemArsMagica{
 		map.put(Enchantments.FIRE_ASPECT, 3);
 		EnchantmentHelper.setEnchantments(map, stack);
 		return stack;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List<ItemStack> par3List){
-		par3List.add(createItemStack());
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldRotateAroundWhenRendering(){
-		return true;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean isFull3D(){
-		return true;
 	}
 }

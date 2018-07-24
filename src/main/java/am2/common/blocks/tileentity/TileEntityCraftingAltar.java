@@ -19,9 +19,6 @@ import am2.api.blocks.TypedMultiblockGroup;
 import am2.api.extensions.ISpellCaster;
 import am2.api.power.IPowerNode;
 import am2.api.spell.AbstractSpellPart;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFadeOut;
-import am2.client.particles.ParticleMoveOnHeading;
 import am2.common.blocks.BlockLectern;
 import am2.common.defs.BlockDefs;
 import am2.common.defs.ItemDefs;
@@ -479,22 +476,8 @@ public class TileEntityCraftingAltar extends TileEntityAMPower implements IMulti
 				if (item.isDead) continue;
 				ItemStack entityItemStack = item.getEntityItem();
 				if (stack != null && compareItemStacks(stack, entityItemStack)){
-					if (!worldObj.isRemote){
-						updateCurrentRecipe(item);
-						item.setDead();
-					}else{
-						//TODO worldObj.playSound(pos.getX(), pos.getY(), pos.getZ(), "arsmagica2:misc.craftingaltar.component_added", 1.0f, 0.4f + worldObj.rand.nextFloat() * 0.6f, false);
-						for (int i = 0; i < 5 * ArsMagica2.config.getGFXLevel(); ++i){
-							AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "radiant", item.posX, item.posY, item.posZ);
-							if (particle != null){
-								particle.setMaxAge(40);
-								particle.AddParticleController(new ParticleMoveOnHeading(particle, worldObj.rand.nextFloat() * 360, worldObj.rand.nextFloat() * 360, 0.01f, 1, false));
-								particle.AddParticleController(new ParticleFadeOut(particle, 1, false).setFadeSpeed(0.05f).setKillParticleOnFinish(true));
-								particle.setParticleScale(0.02f);
-								particle.setRGBColorF(worldObj.rand.nextFloat(), worldObj.rand.nextFloat(), worldObj.rand.nextFloat());
-							}
-						}
-					}
+					updateCurrentRecipe(item);
+					item.setDead();
 				}
 			}
 		}

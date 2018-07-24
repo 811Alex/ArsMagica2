@@ -1,12 +1,10 @@
 package am2.common.spell.component;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.affinity.Affinity;
 import am2.api.blocks.IMultiblock;
@@ -16,8 +14,6 @@ import am2.api.spell.Operation;
 import am2.api.spell.SpellComponent;
 import am2.api.spell.SpellData;
 import am2.api.spell.SpellModifiers;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.buffs.BuffEffectAstralDistortion;
 import am2.common.defs.BlockDefs;
 import am2.common.defs.ItemDefs;
@@ -33,8 +29,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class AstralDistortion extends SpellComponent implements IRitualInteraction{
 
@@ -92,23 +86,7 @@ public class AstralDistortion extends SpellComponent implements IRitualInteracti
 		return null;
 	}
 
-	@Override
-	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier){
-		for (int i = 0; i < 10; ++i){
-			AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, "pulse", x, y, z);
-			if (particle != null){
-				particle.addRandomOffset(5, 4, 5);
-				particle.AddParticleController(new ParticleFloatUpward(particle, 0.2f, 0, 1, false));
-				particle.setMaxAge(25 + rand.nextInt(10));
-				particle.setRGBColorF(0.7f, 0.2f, 0.9f);
-				if (colorModifier > -1){
-					particle.setRGBColorF(((colorModifier >> 16) & 0xFF) / 255.0f, ((colorModifier >> 8) & 0xFF) / 255.0f, (colorModifier & 0xFF) / 255.0f);
-				}
-			}
-		}
-	}
-
-	@Override
+    @Override
 	public Set<Affinity> getAffinity(){
 		return Sets.newHashSet(Affinity.ENDER);
 	}
@@ -156,9 +134,4 @@ public class AstralDistortion extends SpellComponent implements IRitualInteracti
 	public void encodeBasicData(NBTTagCompound tag, Object[] recipe) {
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public ItemStack getResult() {
-		return new ItemStack(BlockDefs.inertSpawner);
-	}
 }

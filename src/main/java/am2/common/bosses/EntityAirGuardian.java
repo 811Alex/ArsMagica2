@@ -1,13 +1,9 @@
 package am2.common.bosses;
 
-import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.affinity.Affinity;
 import am2.api.math.AMVector3;
 import am2.api.sources.DamageSourceLightning;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleApproachEntity;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.bosses.ai.EntityAIDispel;
 import am2.common.bosses.ai.EntityAIHurricane;
 import am2.common.bosses.ai.EntityAISpawnWhirlwind;
@@ -90,20 +86,6 @@ public class EntityAirGuardian extends AM2Boss{
 			break;
 		case SPINNING:
 			this.spinRotation = (this.spinRotation - 40) % 360;
-			if (this.worldObj.isRemote){
-				for (int i = 0; i < ArsMagica2.config.getGFXLevel(); ++i){
-					AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "wind", posX + worldObj.rand.nextDouble() * 4 - 2, posY, posZ + worldObj.rand.nextDouble() * 4 - 2);
-					if (particle != null){
-						if (ticksInCurrentAction < BossActions.SPINNING.getMaxActionTime() - 10){
-							particle.AddParticleController(new ParticleApproachEntity(particle, this, 0.2f, 0.5f, 1, true));
-							particle.AddParticleController(new ParticleFloatUpward(particle, 0.01f, 0.2f, 2, true));
-						}else{
-							particle.AddParticleController(new ParticleFloatUpward(particle, 0.1f, 1, 1, false));
-						}
-						particle.setMaxAge(30);
-					}
-				}
-			}
 			break;
 		}
 
@@ -111,23 +93,8 @@ public class EntityAirGuardian extends AM2Boss{
 			this.motionY *= 0.8999999f;
 		}
 
-		if (this.posY < 150){
-			if (worldObj.isRemote){
-				for (int i = 0; i < 25; ++i){
-					AMParticle wind = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "wind", posX, posY, posZ);
-					if (wind != null){
-						wind.setIgnoreMaxAge(false);
-						wind.setMaxAge(10 + rand.nextInt(10));
-						wind.setDontRequireControllers();
-						wind.addRandomOffset(1, 1, 1);
-						//wind.AddParticleController(new PaticleFleePoint(wind, new AMVector3(this), rand.nextInt() * 0.1f + 0.01f, 10, 1, false));
-					}
-				}
-			}else{
-				if (this.posY < 145)
-					this.setDead();
-			}
-		}
+		if (this.posY < 150 && this.posY < 145)
+			this.setDead();
 
 		super.onUpdate();
 	}

@@ -3,12 +3,9 @@ package am2.common.blocks.tileentity.flickers;
 import java.util.HashMap;
 import java.util.List;
 
-import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.affinity.Affinity;
 import am2.api.flickers.IFlickerController;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.defs.ItemDefs;
 import am2.common.entity.SpawnBlacklists;
 import am2.common.utils.AffinityShiftUtils;
@@ -56,22 +53,14 @@ public class FlickerOperatorProgeny extends AbstractFlickerFunctionality{
 				count++;
 			entityCount.put(clazz, count);
 			if (count == 2){
-				if (worldObj.isRemote){
-					AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "heart", ((TileEntity)habitat).getPos().getX() + 0.5, ((TileEntity)habitat).getPos().getX() + 0.7, ((TileEntity)habitat).getPos().getX() + 0.5);
-					if (particle != null){
-						particle.setMaxAge(20);
-						particle.AddParticleController(new ParticleFloatUpward(particle, 0, 0.05f, 1, false));
-					}
-				}else{
-					creatures = worldObj.getEntitiesWithinAABB(clazz, new AxisAlignedBB(((TileEntity)habitat).getPos()).expandXyz(radius));
-					count = 0;
-					for (EntityAnimal animal : creatures){
-						if (!animal.isChild()){
-							animal.setInLove(null);
-							count++;
-							if (count == 2)
-								break;
-						}
+				creatures = worldObj.getEntitiesWithinAABB(clazz, new AxisAlignedBB(((TileEntity)habitat).getPos()).expandXyz(radius));
+				count = 0;
+				for (EntityAnimal animal : creatures){
+					if (!animal.isChild()){
+						animal.setInLove(null);
+						count++;
+						if (count == 2)
+							break;
 					}
 				}
 				return true;

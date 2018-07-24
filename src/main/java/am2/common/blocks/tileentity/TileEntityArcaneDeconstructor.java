@@ -5,13 +5,10 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.blocks.IKeystoneLockable;
 import am2.api.extensions.ISpellCaster;
 import am2.api.spell.AbstractSpellPart;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleHoldPosition;
 import am2.common.defs.ItemDefs;
 import am2.common.packet.AMDataReader;
 import am2.common.packet.AMDataWriter;
@@ -39,8 +36,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityArcaneDeconstructor extends TileEntityAMPower implements IInventory, ITileEntityPacketSync, ISidedInventory, IKeystoneLockable<TileEntityArcaneDeconstructor>{
 	
@@ -55,9 +50,6 @@ public class TileEntityArcaneDeconstructor extends TileEntityAMPower implements 
 	private int current_deconstruction_time = 0; //how long have we been deconstructing something?
 
 	private static final ArrayList<PowerTypes> validPowerTypes = Lists.newArrayList(PowerTypes.DARK);
-
-	@SideOnly(Side.CLIENT)
-	AMParticle radiant;
 
 	private ItemStack[] inventory;
 
@@ -81,60 +73,46 @@ public class TileEntityArcaneDeconstructor extends TileEntityAMPower implements 
 	@Override
 	public void update(){
 		super.update();
-
-		if (worldObj.isRemote){
-			if (particleCounter == 0 || particleCounter++ > 1000){
-				particleCounter = 1;
-				radiant = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "radiant", pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f);
-				if (radiant != null){
-					radiant.setMaxAge(1000);
-					radiant.setRGBColorF(0.1f, 0.1f, 0.1f);
-					radiant.setParticleScale(0.1f);
-					radiant.AddParticleController(new ParticleHoldPosition(radiant, 1000, 1, false));
-				}
+		if (!isActive()){
+			if (inventory[0] != null){
+				setDeconstructionTime(1);
 			}
 		}else{
-			if (!isActive()){
-				if (inventory[0] != null){
-					setDeconstructionTime(1);
-				}
+			if (inventory[0] == null){
+				setDeconstructionTime(0);
+				deconstructionRecipe = null;
+				this.syncCode |= SYNC_DECONSTRUCTION_RECIPE;
+				this.markDirty();
+				//worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
 			}else{
-				if (inventory[0] == null){
-					setDeconstructionTime(0);
-					deconstructionRecipe = null;
-					this.syncCode |= SYNC_DECONSTRUCTION_RECIPE;
-					this.markDirty();
-					//worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
-				}else{
-					if (PowerNodeRegistry.For(worldObj).checkPower(this, PowerTypes.DARK, DECONSTRUCTION_POWER_COST)){
-						if (deconstructionRecipe == null){
-							if (!getDeconstructionRecipe()){
-								transferOrEjectItem(inventory[0]);
-								setInventorySlotContents(0, null);
-							}
-						}else{
-							setDeconstructionTime(current_deconstruction_time + 1);
-							if (current_deconstruction_time >= DECONSTRUCTION_TIME){
-							        if(getDeconstructionRecipe() == true){
-									for (ItemStack stack : deconstructionRecipe){
-										transferOrEjectItem(stack);
-									}
-								}
-								deconstructionRecipe = null;
-								decrStackSize(0, 1);
-								setDeconstructionTime(0);
-							}
-							if (current_deconstruction_time % 10 == 0)
-								this.markDirty();
-								//worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
+				if (PowerNodeRegistry.For(worldObj).checkPower(this, PowerTypes.DARK, DECONSTRUCTION_POWER_COST)){
+					if (deconstructionRecipe == null){
+						if (!getDeconstructionRecipe()){
+							transferOrEjectItem(inventory[0]);
+							setInventorySlotContents(0, null);
 						}
-						PowerNodeRegistry.For(worldObj).consumePower(this, PowerTypes.DARK, DECONSTRUCTION_POWER_COST);
+					}else{
+						setDeconstructionTime(current_deconstruction_time + 1);
+						if (current_deconstruction_time >= DECONSTRUCTION_TIME){
+								if(getDeconstructionRecipe() == true){
+								for (ItemStack stack : deconstructionRecipe){
+									transferOrEjectItem(stack);
+								}
+							}
+							deconstructionRecipe = null;
+							decrStackSize(0, 1);
+							setDeconstructionTime(0);
+						}
+						if (current_deconstruction_time % 10 == 0)
+							this.markDirty();
+							//worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 2);
 					}
+					PowerNodeRegistry.For(worldObj).consumePower(this, PowerTypes.DARK, DECONSTRUCTION_POWER_COST);
 				}
 			}
-			if (this.shouldSync())
-				AMNetHandler.INSTANCE.sendPacketToAllClientsNear(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64F, AMTileEntityPacketIDs.ARCANE_DECONSTRUCTOR, this.createSyncPacket());
 		}
+		if (this.shouldSync())
+			AMNetHandler.INSTANCE.sendPacketToAllClientsNear(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64F, AMTileEntityPacketIDs.ARCANE_DECONSTRUCTOR, this.createSyncPacket());
 	}
 
 	private boolean getDeconstructionRecipe(){

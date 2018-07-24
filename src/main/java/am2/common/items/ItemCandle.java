@@ -1,19 +1,13 @@
 package am2.common.items;
 
-import java.util.List;
-
 import am2.ArsMagica2;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleHoldPosition;
 import am2.common.blocks.BlockInvisibleUtility;
 import am2.common.defs.BlockDefs;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
@@ -24,8 +18,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemCandle extends ItemArsMagica{
 
@@ -44,16 +36,8 @@ public class ItemCandle extends ItemArsMagica{
 		if (!stack.hasTagCompound() || !stack.getTagCompound().hasKey("search_block")){
 			IBlockState block = worldIn.getBlockState(pos);
 			if (playerIn.isSneaking() && block != null && block.getBlockHardness(worldIn, pos) > 0f && worldIn.getTileEntity(pos) == null){
-				if (!worldIn.isRemote){
-					setSearchBlock(block, stack);
-					worldIn.setBlockToAir(pos);
-				}else{
-					AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldIn, "radiant", pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
-					if (particle != null){
-						particle.AddParticleController(new ParticleHoldPosition(particle, 20, 1, false));
-						particle.setRGBColorF(0, 0.5f, 1);
-					}
-				}
+				setSearchBlock(block, stack);
+				worldIn.setBlockToAir(pos);
 				return EnumActionResult.SUCCESS;
 			}
 		}
@@ -85,16 +69,8 @@ public class ItemCandle extends ItemArsMagica{
 //		if (!stack.hasTagCompound() || !stack.getTagCompound().hasKey("search_block")){
 //			Block block = world.getBlock(x, y, z);
 //			if (player.isSneaking() && block != null && block.getBlockHardness(world, x, y, z) > 0f && world.getTileEntity(x, y, z) == null){
-//				if (!world.isRemote){
-//					setSearchBlock(world.getBlock(x, y, z), world.getBlockMetadata(x, y, z), stack);
-//					world.setBlockToAir(x, y, z);
-//				}else{
-//					AMParticle particle = (AMParticle)AMCore.proxy.particleManager.spawn(world, "radiant", x + 0.5, y + 0.5, z + 0.5);
-//					if (particle != null){
-//						particle.AddParticleController(new ParticleHoldPosition(particle, 20, 1, false));
-//						particle.setRGBColorF(0, 0.5f, 1);
-//					}
-//				}
+//				setSearchBlock(world.getBlock(x, y, z), world.getBlockMetadata(x, y, z), stack);
+//				world.setBlockToAir(x, y, z);
 //				return true;
 //			}
 //		}
@@ -216,27 +192,6 @@ public class ItemCandle extends ItemArsMagica{
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public String getItemStackDisplayName(ItemStack stack){
-		String name = I18n.format("item.arsmagica2:warding_candle.name");
-		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("search_block")){
-			IBlockState state = Block.getStateById(stack.getTagCompound().getInteger("search_block"));
-			ItemStack blockStack = new ItemStack(state.getBlock(), 0, state.getBlock().getMetaFromState(state));
-			Item tempItem = blockStack.getItem();
-			if(tempItem == null){
-				name += " (" + stack.getTagCompound().getInteger("search_block") + ":" + stack.getTagCompound().getInteger("search_meta") + ")";
-			}
-			else{
-				name += " (" + blockStack.getDisplayName() + ")";
-			}
-		}else{
-			name += " (" + I18n.format("am2.tooltip.unattuned") + ")";
-		}
-
-		return name;
-	}
-
-	@Override
 	public boolean getHasSubtypes(){
 		return true;
 	}
@@ -249,13 +204,6 @@ public class ItemCandle extends ItemArsMagica{
 		if (newStack.getTagCompound() == null) return slotChanged;
 		if (oldStack.getTagCompound().equals(newStack.getTagCompound())) return false;
 		return slotChanged;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List<ItemStack> par3List){
-		ItemStack unattuned = new ItemStack(this, 1, 0);
-		par3List.add(unattuned);
 	}
 }
 

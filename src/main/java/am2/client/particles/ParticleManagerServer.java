@@ -224,11 +224,4 @@ public class ParticleManagerServer{
 	public void spawnBuffParticles(EntityLivingBase entityliving){
 	}
 
-	public ParticleController createDefaultParticleController(int type, Object effect, EntityLivingBase ent){
-		return null;
-	}
-
-	public ParticleController createDefaultParticleController(int type, Object effect, Vec3d location, float modifier, int meta){
-		return null;
-	}
 }

@@ -2,9 +2,6 @@ package am2.common.entity;
 
 import java.util.List;
 
-import am2.ArsMagica2;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleMoveOnHeading;
 import am2.common.bosses.EntityWinterGuardian;
 import am2.common.buffs.BuffEffectFrostSlowed;
 import am2.common.defs.ItemDefs;
@@ -24,7 +21,6 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -182,23 +178,6 @@ public class EntityWinterGuardianArm extends EntityLiving{
 		}
 		rotationPitch = prevRotationPitch + (rotationPitch - prevRotationPitch) * 0.4F;
 		rotationYaw = prevRotationYaw + (rotationYaw - prevRotationYaw) * 0.4F;
-		if (isInWater()){
-			for (int k = 0; k < 4; k++){
-				float f3 = 0.25F;
-				worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX - motionX * f3, posY - motionY * f3, posZ - motionZ * f3, motionX, motionY, motionZ);
-			}
-		}else{
-			for (int i = 0; i < 2; ++i){
-				AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "ember", posX + rand.nextFloat() * 0.2 - 0.1, posY + 1.2, posZ + rand.nextFloat() * 0.2 - 0.1);
-				if (particle != null){
-					particle.setIgnoreMaxAge(false);
-					particle.setMaxAge(15);
-					particle.setParticleScale(0.35f);
-					particle.setRGBColorF(0.5098f, 0.7843f, 0.7843f);
-					particle.AddParticleController(new ParticleMoveOnHeading(particle, Math.toDegrees(this.rotationPitch), Math.toDegrees(this.rotationYaw), 0.2f, 1, false));
-				}
-			}
-		}
 		setPosition(posX, posY, posZ);
 
 		int halflife = 80;

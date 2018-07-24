@@ -2,13 +2,8 @@ package am2.common.entity;
 
 import java.util.List;
 
-import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.affinity.Affinity;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFadeOut;
-import am2.client.particles.ParticleFloatUpward;
-import am2.client.particles.ParticleMoveOnHeading;
 import am2.common.defs.AMSounds;
 import am2.common.defs.ItemDefs;
 import am2.common.extensions.EntityExtension;
@@ -138,23 +133,9 @@ public class EntityHecate extends EntityZombie{
 		if (this.motionY < 0)
 			this.motionY *= 0.79999f;
 
-		if (this.worldObj != null){
-			if (this.worldObj.isRemote){
-				if (!this.getFlag(5) && this.ticksExisted % 3 == 0){
-					spawnLivingParticles();
-				}else if (!hasSpawnedInvisParticles){
-					spawnInvisibilityParticles();
-				}
-
-				if (invisibilityCounter > 0) invisibilityCounter--;
-
-				updateArmRotations();
-				updateForwardRotation();
-			}
-			if (this.worldObj.getDifficulty() == EnumDifficulty.HARD && this.getAttackTarget() != null && this.invisibilityCooldown == 0){
-				this.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("invisibility"), 60, 2));
-				this.invisibilityCooldown = 600;
-			}
+		if (this.worldObj != null && this.worldObj.getDifficulty() == EnumDifficulty.HARD && this.getAttackTarget() != null && this.invisibilityCooldown == 0) {
+			this.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("invisibility"), 60, 2));
+			this.invisibilityCooldown = 600;
 		}
 		super.onUpdate();
 	}
@@ -172,51 +153,12 @@ public class EntityHecate extends EntityZombie{
 		super.onLivingUpdate();
 	}
 
-	private void spawnInvisibilityParticles(){
-		/*for (int i = 0; i < 50; ++i){
-			ArsMagicaParticle effect = ParticleManager.spawn(this.worldObj, "hr_smoke", this.posX + rand.nextDouble(), this.posY + 1, this.posZ);
-			if (effect != null){
-				effect.setMaxAge(20);
-				effect.setIgnoreMaxAge(false);
-				effect.AddParticleController(new ParticleFleeEntity(effect, this, 0.1, 3, 1, false));
-			}
-		}*/
-		hasSpawnedInvisParticles = true;
-		this.invisibilityCooldown = 600;
-	}
-
 	public double getLeftArmOffset(){
 		return this.leftArmRotationOffset;
 	}
 
 	public double getRightArmOffset(){
 		return this.rightArmRotationOffset;
-	}
-
-	private void spawnLivingParticles(){
-
-		if (rand.nextInt(3) == 0){
-			double yPos = this.posY + 1.1;
-			if (this.currentForwardRotation >= 0.24){
-				yPos += 0.3;
-			}
-
-			AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "smoke",
-					this.posX + ((rand.nextFloat() * 0.2) - 0.1f),
-					yPos,
-					this.posZ + ((rand.nextFloat() * 0.4) - 0.2f));
-			if (effect != null){
-				if (this.currentForwardRotation < 0.24){
-					effect.AddParticleController(new ParticleFloatUpward(effect, 0.1f, -0.06f, 1, false));
-				}else{
-					effect.AddParticleController(new ParticleMoveOnHeading(effect, this.rotationYaw - 90, this.rotationPitch, 0.01f, 1, false));
-				}
-				effect.AddParticleController(new ParticleFadeOut(effect, 2, false).setFadeSpeed(0.04f));
-				effect.setMaxAge(25);
-				effect.setIgnoreMaxAge(false);
-				effect.setRGBColorF(0.3f, 0.3f, 0.3f);
-			}
-		}
 	}
 
 	private void updateArmRotations(){

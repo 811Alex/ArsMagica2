@@ -1,11 +1,7 @@
 package am2.common.items;
 
-import am2.ArsMagica2;
 import am2.api.math.AMVector3;
 import am2.api.power.IPowerNode;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFadeOut;
-import am2.client.particles.ParticleMoveOnHeading;
 import am2.common.blocks.tileentity.TileEntityCrystalMarker;
 import am2.common.blocks.tileentity.TileEntityFlickerHabitat;
 import am2.common.blocks.tileentity.TileEntityParticleEmitter;
@@ -72,36 +68,26 @@ public class ItemCrystalWrench extends ItemArsMagicaRotated{
 
 	private void handleCMPair(ItemStack stack, World world, EntityPlayer player, TileEntity te, double hitX, double hitY, double hitZ){
 		AMVector3 habLocation = AMVector3.readFromNBT(stack.getTagCompound().getCompoundTag(HAB_PAIRLOC));
-		if (world.isRemote){
-			spawnLinkParticles(world, hitX, hitY, hitZ);
-		}else{
-			TileEntityCrystalMarker tecm = (TileEntityCrystalMarker)te;
-
-			tecm.linkToHabitat(habLocation, player);
-
-			if (!stack.getTagCompound().hasKey(KEEP_BINDING))
-				stack.getTagCompound().removeTag(HAB_PAIRLOC);
-		}
+		TileEntityCrystalMarker tecm = (TileEntityCrystalMarker)te;
+		tecm.linkToHabitat(habLocation, player);
+		if (!stack.getTagCompound().hasKey(KEEP_BINDING))
+			stack.getTagCompound().removeTag(HAB_PAIRLOC);
 	}
 
 	private void storePairLocation(World world, TileEntity te, ItemStack stack, EntityPlayer player, double hitX, double hitY, double hitZ){
 		AMVector3 destination = new AMVector3(te);
-		if (!world.isRemote){
-			if (te instanceof TileEntityFlickerHabitat){
-				NBTTagCompound habLoc = new NBTTagCompound();
-				destination.writeToNBT(habLoc);
-				stack.getTagCompound().setTag(HAB_PAIRLOC, habLoc);
-			}else{
-				NBTTagCompound pairLoc = new NBTTagCompound();
-				destination.writeToNBT(pairLoc);
-				stack.getTagCompound().setTag(KEY_PAIRLOC, pairLoc);
-			}
-
-			if (player.isSneaking()){
-				stack.getTagCompound().setBoolean(KEEP_BINDING, true);
-			}
+		if (te instanceof TileEntityFlickerHabitat){
+			NBTTagCompound habLoc = new NBTTagCompound();
+			destination.writeToNBT(habLoc);
+			stack.getTagCompound().setTag(HAB_PAIRLOC, habLoc);
 		}else{
-			spawnLinkParticles(world, hitX, hitY, hitZ);
+			NBTTagCompound pairLoc = new NBTTagCompound();
+			destination.writeToNBT(pairLoc);
+			stack.getTagCompound().setTag(KEY_PAIRLOC, pairLoc);
+		}
+
+		if (player.isSneaking()){
+			stack.getTagCompound().setBoolean(KEEP_BINDING, true);
 		}
 	}
 
@@ -110,8 +96,6 @@ public class ItemCrystalWrench extends ItemArsMagicaRotated{
 		TileEntity sourceTE = world.getTileEntity(source.toBlockPos());
 		if (sourceTE != null && sourceTE instanceof IPowerNode && !world.isRemote){
 			player.addChatMessage(new TextComponentString(PowerNodeRegistry.For(world).tryPairNodes((IPowerNode<?>)sourceTE, (IPowerNode<?>)te)));
-		}else if (world.isRemote){
-			spawnLinkParticles(world, pos.getX() + hitX, pos.getY() + hitY, pos.getZ() + hitZ);
 		}
 		if (!stack.getTagCompound().hasKey(KEEP_BINDING))
 			stack.getTagCompound().removeTag(KEY_PAIRLOC);
@@ -119,11 +103,7 @@ public class ItemCrystalWrench extends ItemArsMagicaRotated{
 
 	private void doDisconnect(IPowerNode<?> node, World world, double hitX, double hitY, double hitZ, EntityPlayer player){
 		PowerNodeRegistry.For(world).tryDisconnectAllNodes(node);
-		if (world.isRemote){
-			spawnLinkParticles(player.worldObj, hitX, hitY, hitZ, true);
-		}else{
-			player.addChatMessage(new TextComponentString(I18n.format("am2.tooltip.disconnectPower")));
-		}
+		player.addChatMessage(new TextComponentString(I18n.format("am2.tooltip.disconnectPower")));
 	}
 
 	private void handleModeChanges(ItemStack stack){
@@ -149,26 +129,6 @@ public class ItemCrystalWrench extends ItemArsMagicaRotated{
 			return stack.getTagCompound().getInteger(MODE);
 		}
 		return 0;
-	}
-
-	private void spawnLinkParticles(World world, double hitX, double hitY, double hitZ){
-		spawnLinkParticles(world, hitX, hitY, hitZ, false);
-	}
-
-	private void spawnLinkParticles(World world, double hitX, double hitY, double hitZ, boolean disconnect){
-		for (int i = 0; i < 10; ++i){
-			AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, "none_hand", hitX, hitY, hitZ);
-			if (particle != null){
-				if (disconnect){
-					particle.setRGBColorF(1, 0, 0);
-					particle.addRandomOffset(0.5f, 0.5f, 0.5f);
-				}
-				particle.setMaxAge(10);
-				particle.setParticleScale(0.1f);
-				particle.AddParticleController(new ParticleMoveOnHeading(particle, world.rand.nextInt(360), world.rand.nextInt(360), world.rand.nextDouble() * 0.2, 1, false));
-				particle.AddParticleController(new ParticleFadeOut(particle, 1, false).setFadeSpeed(0.1f));
-			}
-		}
 	}
 
 	@Override

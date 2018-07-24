@@ -1,7 +1,5 @@
 package am2.common.items;
 
-import java.util.List;
-
 import am2.ArsMagica2;
 import am2.common.container.InventoryEssenceBag;
 import am2.common.defs.IDDefs;
@@ -12,11 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemEssenceBag extends ItemArsMagica{
 
@@ -30,13 +25,6 @@ public class ItemEssenceBag extends ItemArsMagica{
 	public boolean getShareTag(){
 		return true;
 	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List<String> par3List, boolean par4){
-		par3List.add(I18n.format("am2.tooltip.rupees"));
-	}
-
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,

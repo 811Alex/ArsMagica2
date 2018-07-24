@@ -2,16 +2,11 @@ package am2.common.blocks.tileentity;
 
 import java.util.ArrayList;
 
-import am2.ArsMagica2;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFadeOut;
-import am2.client.particles.ParticleMoveOnHeading;
 import am2.common.defs.ItemDefs;
 import am2.common.packet.AMDataWriter;
 import am2.common.packet.AMNetHandler;
 import am2.common.packet.AMPacketIDs;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,7 +15,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityEnchantmentTable;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 
 public class TileEntityLectern extends TileEntityEnchantmentTable implements ITickable{
@@ -51,20 +45,7 @@ public class TileEntityLectern extends TileEntityEnchantmentTable implements ITi
 
 	@Override
 	public void update(){
-		if (worldObj.isRemote){
-			updateBookRender();
-			if (tooltipStack != null && tickCount % 2 == 0){
-				AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "sparkle", pos.getX() + 0.5 + ((worldObj.rand.nextDouble() * 0.2) - 0.1), pos.getY() + 1, pos.getZ() + 0.5 + ((worldObj.rand.nextDouble() * 0.2) - 0.1));
-				if (particle != null){
-					particle.AddParticleController(new ParticleMoveOnHeading(particle, worldObj.rand.nextDouble() * 360, -45 - worldObj.rand.nextInt(90), 0.05f, 1, false));
-					particle.AddParticleController(new ParticleFadeOut(particle, 2, false).setFadeSpeed(0.05f).setKillParticleOnFinish(true));
-					particle.setIgnoreMaxAge(true);
-					if (getOverpowered()){
-						particle.setRGBColorF(1.0f, 0.2f, 0.2f);
-					}
-				}
-			}
-		} else if (tickCount % 20 == 0){
+		if (tickCount % 20 == 0){
 			IBlockState state = this.worldObj.getBlockState(this.pos);
 			//This is probably the fastest I can get it to go.
 			//If you know of any better way, please feel free to suggest it.

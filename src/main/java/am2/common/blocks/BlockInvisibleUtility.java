@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import am2.ArsMagica2;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFadeOut;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.defs.ItemDefs;
 import am2.common.defs.PotionEffectsDefs;
 import net.minecraft.block.material.Material;
@@ -94,8 +90,6 @@ public class BlockInvisibleUtility extends BlockAM{
 		double distanceThreshold = 1.1;
 		double shortDistanceThreshold = 0.1;
 
-		boolean isCollided = false;
-
 		if (entity.width < 0.5 || entity.height < 0.5){
 			distanceThreshold = 0.5f;
 			shortDistanceThreshold = -0.2f;
@@ -106,55 +100,37 @@ public class BlockInvisibleUtility extends BlockAM{
 			case COLLISION_POSITIVE_X: //+x
 				if (entity.posX > pos.getX() + distanceThreshold){
 					collidingBoxes.add(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.25, pos.getY() + 1.6, pos.getZ() + 1.25));
-					isCollided = true;
 				}
 				break;
 			case COLLISION_NEGATIVE_X: //-x
 				if (entity.posX < pos.getX() - shortDistanceThreshold){
 					collidingBoxes.add(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.25, pos.getY() + 1.6, pos.getZ() + 1.25));
-					isCollided = true;
 				}
 				break;
 			case COLLISION_POSITIVE_Z: //+z
 				if (entity.posZ > pos.getZ() + distanceThreshold){
 					collidingBoxes.add(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.25, pos.getY() + 1.6, pos.getZ() + 1.25));
-					isCollided = true;
 				}
 				break;
 			case COLLISION_NEGATIVE_Z: //-z
 				if (entity.posZ < pos.getZ() - shortDistanceThreshold){
 					collidingBoxes.add(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.25, pos.getY() + 1.6, pos.getZ() + 1.25));
-					isCollided = true;
 				}
 				break;
 			case COLLISION_ALL_X: //+/- x
 				if (entity.posX > pos.getX() + distanceThreshold || entity.posX < pos.getX() - shortDistanceThreshold){
 					collidingBoxes.add(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.25, pos.getY() + 1.6, pos.getZ() + 1.25));
-					isCollided = true;
 				}
 				break;
 			case COLLISION_ALL_Z: //+/- z
 				if (entity.posZ > pos.getZ() + distanceThreshold || entity.posZ < pos.getZ() - shortDistanceThreshold){
 					collidingBoxes.add(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.25, pos.getY() + 1.6, pos.getZ() + 1.25));
-					isCollided = true;
 				}
 				break;
 			case COLLISION_ALL: //all
 				collidingBoxes.add(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.25, pos.getY() + 1.6, pos.getZ() + 1.25));
-				isCollided = true;
 				break;
 			}
-
-			if (world.isRemote && isCollided)
-				spawnBlockParticles(world, pos);
-		}
-	}
-	
-	@Override
-	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
-		if (worldIn.isRemote){
-			if (getType(state).type == EnumType.COLLISION)
-				spawnBlockParticles(worldIn, pos);
 		}
 	}
 	
@@ -168,22 +144,6 @@ public class BlockInvisibleUtility extends BlockAM{
 		return false;
 	}
 
-	private void spawnBlockParticles(World world, BlockPos pos){
-		AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, "symbols", pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
-		if (particle != null){
-			particle.addRandomOffset(1, 1.6, 1);
-			particle.setParticleScale(0.1f);
-			particle.AddParticleController(new ParticleFloatUpward(particle, 0, 0.02f, 1, false));
-			particle.AddParticleController(new ParticleFadeOut(particle, 1, false).setFadeSpeed(0.05f));
-			particle.setMaxAge(20);
-			if (world.rand.nextBoolean()){
-				particle.setRGBColorI(0x481bc8);
-			}else{
-				particle.setRGBColorI(0x891bc8);
-			}
-		}
-	}
-	
 	@Override
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
 		return null;
@@ -252,16 +212,6 @@ public class BlockInvisibleUtility extends BlockAM{
 				world.setBlockToAir(pos);
 
 			world.scheduleBlockUpdate(pos, this, this.tickRate(world), 0);
-		}
-	}
-	
-	@Override
-	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-		if (worldIn.rand.nextInt(10) < 3 && getType(stateIn).type == EnumType.COLLISION){
-			List<Entity> ents = worldIn.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos).expandXyz(0.2F));
-			if (ents.size() > 0){
-				spawnBlockParticles(worldIn, pos);
-			}
 		}
 	}
 		

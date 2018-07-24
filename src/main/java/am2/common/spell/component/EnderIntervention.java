@@ -1,7 +1,6 @@
 package am2.common.spell.component;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -11,8 +10,6 @@ import am2.api.affinity.Affinity;
 import am2.api.spell.SpellComponent;
 import am2.api.spell.SpellData;
 import am2.api.spell.SpellModifiers;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.defs.ItemDefs;
 import am2.common.defs.PotionEffectsDefs;
 import am2.common.utils.AffinityShiftUtils;
@@ -73,23 +70,7 @@ public class EnderIntervention extends SpellComponent{
 		return new ItemStack[]{AffinityShiftUtils.getEssenceForAffinity(Affinity.ENDER)};
 	}
 
-	@Override
-	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier){
-		for (int i = 0; i < 100; ++i){
-			AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, "ghost", x, y - 1, z);
-			if (particle != null){
-				particle.addRandomOffset(1, 2, 1);
-				particle.AddParticleController(new ParticleFloatUpward(particle, 0, 0.1f, 1, false));
-				particle.setMaxAge(25 + rand.nextInt(10));
-				particle.setRGBColorF(0.7f, 0.2f, 0.2f);
-				if (colorModifier > -1){
-					particle.setRGBColorF(((colorModifier >> 16) & 0xFF) / 255.0f, ((colorModifier >> 8) & 0xFF) / 255.0f, (colorModifier & 0xFF) / 255.0f);
-				}
-			}
-		}
-	}
-
-	@Override
+    @Override
 	public Set<Affinity> getAffinity(){
 		return Sets.newHashSet(Affinity.ENDER);
 	}

@@ -7,17 +7,11 @@ import com.google.common.base.Optional;
 import am2.ArsMagica2;
 import am2.api.DamageSources;
 import am2.api.spell.SpellData;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleChangeSize;
-import am2.client.particles.ParticleColorShift;
-import am2.client.particles.ParticleHoldPosition;
 import am2.common.blocks.BlockArsMagicaOre;
 import am2.common.blocks.BlockArsMagicaOre.EnumOreType;
 import am2.common.defs.BlockDefs;
 import am2.common.packet.AMNetHandler;
-import am2.common.utils.MathUtilities;
 import am2.common.utils.SpellUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -171,42 +165,6 @@ public class EntityThrownRock extends EntityLiving{
 			motionY -= 0.1f;
 			if (motionY < -2f)
 				motionY = -2f;
-		}
-
-		if (worldObj.isRemote){
-			if (getIsMoonstoneMeteor()){
-				AMParticle fire = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "explosion_2", posX, posY, posZ);
-				if (fire != null){
-					fire.setMaxAge(20);
-					fire.setRGBColorF(1, 1, 1);
-					fire.setParticleScale(2.0f);
-					fire.AddParticleController(new ParticleHoldPosition(fire, 20, 1, false));
-					fire.AddParticleController(new ParticleColorShift(fire, 1, false).SetShiftSpeed(0.1f).SetColorTarget(0.01f, 0.01f, 0.01f).SetEndOnReachingTargetColor().setKillParticleOnFinish(false));
-				}
-			}else if (getIsShootingStar()){
-
-				int color = getSpell().getColor(worldObj, throwingEntity, null);
-
-				for (float i = 0; i < Math.abs(motionY); i += 0.1f){
-					AMParticle star = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "ember", posX + motionX * i, posY + motionY * i, posZ + motionZ * i);
-					if (star != null){
-						star.setMaxAge(22);
-						float clrMod = Minecraft.getMinecraft().theWorld.rand.nextFloat();
-						int finalColor = -1;
-						if (color == -1)
-							finalColor = MathUtilities.colorFloatsToInt(0.24f * clrMod, 0.58f * clrMod, 0.71f * clrMod);
-						else{
-							float[] colors = MathUtilities.colorIntToFloats(color);
-							for (int c = 0; c < colors.length; ++c)
-								colors[c] = colors[c] * clrMod;
-							finalColor = MathUtilities.colorFloatsToInt(colors[0], colors[1], colors[2]);
-						}
-						star.setRGBColorI(finalColor);
-						star.AddParticleController(new ParticleHoldPosition(star, 20, 1, false));
-						star.AddParticleController(new ParticleChangeSize(star, 0.5f, 0.05f, 20, 1, false));
-					}
-				}
-			}
 		}
 
 		Vec3d vec3d = new Vec3d(posX, posY, posZ);

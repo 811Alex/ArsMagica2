@@ -1,10 +1,7 @@
 package am2.common.bosses;
 
-import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.affinity.Affinity;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleHoldPosition;
 import am2.common.bosses.ai.EntityAICastSpell;
 import am2.common.bosses.ai.EntityAIDispel;
 import am2.common.bosses.ai.EntityAILightningBolt;
@@ -76,51 +73,6 @@ public class EntityLightningGuardian extends AM2Boss implements IAnimatedEntity{
 
 			if (!this.worldObj.isRemote && this.getDistanceSqToEntity(getAttackTarget()) > 64D && this.getCurrentAction() == BossActions.IDLE){
 				this.getNavigator().tryMoveToEntityLiving(getAttackTarget(), 0.5f);
-			}
-		}
-
-		if (worldObj.isRemote){
-			int halfDist = 8;
-			int dist = 16;
-			if (this.getCurrentAction() == BossActions.CHARGE){
-				if (ticksInCurrentAction > 50){
-					for (int i = 0; i < 2 * ArsMagica2.config.getGFXLevel(); ++i){
-						AMParticle smoke = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "smoke", posX, posY + 4, posZ);
-						if (smoke != null){
-							smoke.addRandomOffset(halfDist, 1, halfDist);
-							smoke.SetParticleAlpha(1f);
-							smoke.setParticleScale(1f);
-							smoke.setMaxAge(20);
-							smoke.AddParticleController(new ParticleHoldPosition(smoke, 10, 1, false));
-
-						}
-					}
-				}
-				if (ticksInCurrentAction > 66){
-					ArsMagica2.proxy.particleManager.BoltFromPointToPoint(
-							worldObj,
-							posX + rand.nextDouble() - 0.5,
-							posY + rand.nextDouble() - 0.5 + 2,
-							posZ + rand.nextDouble() - 0.5,
-							posX + rand.nextDouble() * dist - halfDist,
-							posY + rand.nextDouble() * dist - halfDist,
-							posZ + rand.nextDouble() * dist - halfDist);
-				}
-			}else if (this.getCurrentAction() == BossActions.LONG_CASTING){
-				if (ticksInCurrentAction > 25 && ticksInCurrentAction < 150){
-					for (int i = 0; i < 2 * ArsMagica2.config.getGFXLevel(); ++i){
-						AMParticle smoke = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "smoke", posX, posY + 4, posZ);
-						if (smoke != null){
-							smoke.addRandomOffset(halfDist, 1, halfDist);
-							smoke.SetParticleAlpha(1f);
-							smoke.setParticleScale(1f);
-							smoke.setRGBColorI(ticksInCurrentAction < 85 ? 0xFFFFFF - 0x111111 * ((ticksInCurrentAction - 25) / 4) : 0x222222);
-							smoke.setMaxAge(20);
-							smoke.AddParticleController(new ParticleHoldPosition(smoke, 10, 1, false));
-
-						}
-					}
-				}
 			}
 		}
 	}

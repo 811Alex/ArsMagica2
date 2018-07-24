@@ -1,12 +1,10 @@
 package am2.common.spell.component;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import am2.ArsMagica2;
 import am2.api.affinity.Affinity;
 import am2.api.blocks.IMultiblock;
 import am2.api.rituals.IRitualInteraction;
@@ -15,8 +13,6 @@ import am2.api.spell.Operation;
 import am2.api.spell.SpellComponent;
 import am2.api.spell.SpellData;
 import am2.api.spell.SpellModifiers;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleOrbitEntity;
 import am2.common.defs.ItemDefs;
 import am2.common.defs.PotionEffectsDefs;
 import net.minecraft.entity.Entity;
@@ -30,8 +26,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Absorption extends SpellComponent implements IRitualInteraction {
 	@Override
@@ -68,25 +62,7 @@ public class Absorption extends SpellComponent implements IRitualInteraction {
 		return null;
 	}
 
-	@Override
-	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target,
-			Random rand, int colorModifier) {
-		for (int i = 0; i < 15; ++i) {
-			AMParticle particle = (AMParticle) ArsMagica2.proxy.particleManager.spawn(world, "lens_flare", x, y, z);
-			if (particle != null) {
-				particle.AddParticleController(new ParticleOrbitEntity(particle, target, 0.1f, 1, false)
-						.SetTargetDistance(rand.nextDouble() + 0.5));
-				particle.setMaxAge(25 + rand.nextInt(10));
-				particle.setRGBColorF(244, 200, 60);
-				if (colorModifier > -1) {
-					particle.setRGBColorF(((colorModifier >> 16) & 0xFF) / 255.0f,
-							((colorModifier >> 8) & 0xFF) / 255.0f, (colorModifier & 0xFF) / 255.0f);
-				}
-			}
-		}
-	}
-
-	@Override
+    @Override
 	public Set<Affinity> getAffinity() {
 		return Sets.newHashSet(Affinity.LIFE);
 	}
@@ -127,9 +103,4 @@ public class Absorption extends SpellComponent implements IRitualInteraction {
 		return 3;
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public ItemStack getResult() {
-		return null;
-	}
 }

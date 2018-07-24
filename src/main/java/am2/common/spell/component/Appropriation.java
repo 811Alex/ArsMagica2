@@ -2,18 +2,14 @@ package am2.common.spell.component;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import am2.ArsMagica2;
 import am2.api.affinity.Affinity;
 import am2.api.spell.SpellComponent;
 import am2.api.spell.SpellData;
 import am2.api.spell.SpellModifiers;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleOrbitPoint;
 import am2.common.blocks.BlockArsMagicaBlock.EnumBlockType;
 import am2.common.defs.BlockDefs;
 import am2.common.utils.DummyEntityPlayer;
@@ -149,20 +145,7 @@ public class Appropriation extends SpellComponent{
 		return null;
 	}
 
-	@Override
-	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier){
-		for (int i = 0; i < 5 + 5 * ArsMagica2.config.getGFXLevel(); ++i){
-			AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, "water_ball", x, y, z);
-			if (particle != null){
-				particle.addRandomOffset(1, 1, 1);
-				particle.setMaxAge(10);
-				particle.setParticleScale(0.1f);
-				particle.AddParticleController(new ParticleOrbitPoint(particle, x, y, z, 1, false).SetTargetDistance(world.rand.nextDouble() + 0.1f).SetOrbitSpeed(0.2f));
-			}
-		}
-	}
-
-	@Override
+    @Override
 	public Set<Affinity> getAffinity(){
 		return Sets.newHashSet(Affinity.WATER);
 	}

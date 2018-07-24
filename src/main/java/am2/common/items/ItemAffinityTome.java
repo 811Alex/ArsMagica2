@@ -1,22 +1,15 @@
 package am2.common.items;
 
-import java.util.List;
-
 import am2.api.ArsMagicaAPI;
 import am2.api.affinity.Affinity;
 import am2.api.extensions.IAffinityData;
 import am2.common.extensions.AffinityData;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemAffinityTome extends ItemArsMagica {
 
@@ -24,14 +17,6 @@ public class ItemAffinityTome extends ItemArsMagica {
 	public ItemAffinityTome() {
 		setHasSubtypes(true);
 		setMaxDamage(0);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
-		for (int i = 0; i < ArsMagicaAPI.getAffinityRegistry().getValues().size(); i++) {
-			subItems.add(new ItemStack(itemIn, 1, i));
-		}
 	}
 	
 	@Override
@@ -51,18 +36,5 @@ public class ItemAffinityTome extends ItemArsMagica {
 		par1ItemStack.stackSize--;
 
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, par1ItemStack);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public String getItemStackDisplayName(ItemStack stack) {
-		Affinity aff = ArsMagicaAPI.getAffinityRegistry().getObjectById(stack.getItemDamage());
-		return I18n.format("item.arsmagica2:tome.name", aff.getLocalizedName());
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean hasEffect(ItemStack stack) {
-		return true;
 	}
 }

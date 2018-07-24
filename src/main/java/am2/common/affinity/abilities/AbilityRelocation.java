@@ -3,11 +3,9 @@ package am2.common.affinity.abilities;
 import am2.ArsMagica2;
 import am2.api.affinity.AbstractAffinityAbility;
 import am2.api.affinity.Affinity;
-import am2.common.defs.BindingsDefs;
 import am2.common.extensions.AffinityData;
 import am2.common.extensions.EntityExtension;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -16,8 +14,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class AbilityRelocation extends AbstractAffinityAbility {
 
@@ -34,13 +30,7 @@ public class AbilityRelocation extends AbstractAffinityAbility {
 	public Affinity getAffinity() {
 		return Affinity.ENDER;
 	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public KeyBinding getKey() {
-		return BindingsDefs.ENDER_TP;
-	}
-	
+
 	@Override
 	public boolean canApply(EntityPlayer player) {
 		return super.canApply(player);

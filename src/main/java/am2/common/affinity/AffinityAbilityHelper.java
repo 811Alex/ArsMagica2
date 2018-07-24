@@ -2,7 +2,6 @@ package am2.common.affinity;
 
 import java.util.Map.Entry;
 
-import am2.ArsMagica2;
 import am2.api.affinity.AbstractAffinityAbility;
 import am2.api.affinity.Affinity;
 import am2.api.event.SpellCastEvent;
@@ -39,9 +38,6 @@ import am2.common.affinity.abilities.AbilityThunderPunch;
 import am2.common.affinity.abilities.AbilityWaterFreeze;
 import am2.common.affinity.abilities.AbilityWaterWeakness;
 import am2.common.extensions.AffinityData;
-import am2.common.packet.AMDataWriter;
-import am2.common.packet.AMNetHandler;
-import am2.common.packet.AMPacketIDs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
@@ -49,10 +45,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class AffinityAbilityHelper {
 	
@@ -111,25 +104,8 @@ public class AffinityAbilityHelper {
 		GameRegistry.register(new AbilityThunderPunch());
 		GameRegistry.register(new AbilityWaterWeakness(Affinity.LIGHTNING));
 	}
-	
-	
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void onKeyInput(InputEvent.KeyInputEvent event) {
-		for (AbstractAffinityAbility ability : GameRegistry.findRegistry(AbstractAffinityAbility.class).getValues()) {
-			if (ability.getKey() != null && ability.getKey().isPressed()) {
-				EntityPlayer player = ArsMagica2.proxy.getLocalPlayer();
-				if (ability.canApply(player)) {
-					AMDataWriter syncPacket = new AMDataWriter();
-					syncPacket.add(player.getEntityId());
-					syncPacket.add(ability.getRegistryName().toString());
-					ability.applyKeyPress(player);
-					AMNetHandler.INSTANCE.sendPacketToServer(AMPacketIDs.KEY_ABILITY_PRESS, syncPacket.generate());
-				}
-			}
-		}
-	}
-	
+
+
 	@SubscribeEvent
 	public void onPlayerTick(LivingUpdateEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer) {
@@ -147,7 +123,7 @@ public class AffinityAbilityHelper {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onPlayerHurt(LivingHurtEvent event) {
 		if (event.getEntityLiving() instanceof EntityPlayer) {

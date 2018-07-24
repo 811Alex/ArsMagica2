@@ -13,10 +13,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemLightningCharm extends ItemArsMagica{
 
@@ -90,12 +87,5 @@ public class ItemLightningCharm extends ItemArsMagica{
 	@Override
 	public boolean hasEffect(ItemStack stack) {
 		return isActive(stack);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List<String> par3List, boolean par4){
-		par3List.add(I18n.format("am2.tooltip.lightning_charm"));
-		super.addInformation(par1ItemStack, par2EntityPlayer, par3List, par4);
 	}
 }

@@ -3,18 +3,14 @@ package am2.common.spell.component;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import am2.ArsMagica2;
 import am2.api.affinity.Affinity;
 import am2.api.spell.SpellComponent;
 import am2.api.spell.SpellData;
 import am2.api.spell.SpellModifiers;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleApproachPoint;
 import am2.common.defs.ItemDefs;
 import am2.common.extensions.EntityExtension;
 import net.minecraft.entity.Entity;
@@ -103,32 +99,8 @@ public class Telekinesis extends SpellComponent{
 	public EnumSet<SpellModifiers> getModifiers() {
 		return EnumSet.noneOf(SpellModifiers.class);
 	}
-	
-	@Override
-	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier){
 
-		if (caster instanceof EntityPlayer){
-			double range = EntityExtension.For(caster).getTKDistance();
-			RayTraceResult mop = ItemDefs.spell.getMovingObjectPosition(caster, world, range, false, false);
-			if (mop == null){
-				x = caster.posX + (Math.cos(Math.toRadians(caster.rotationYaw + 90)) * range);
-				z = caster.posZ + (Math.sin(Math.toRadians(caster.rotationYaw + 90)) * range);
-				y = caster.posY + caster.getEyeHeight() + (-Math.sin(Math.toRadians(caster.rotationPitch)) * range);
-			}
-		}
-
-
-		AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, "arcane", x - 0.5 + rand.nextDouble(), y - 0.5 + rand.nextDouble(), z - 0.5 + rand.nextDouble());
-		if (effect != null){
-			effect.AddParticleController(new ParticleApproachPoint(effect, x, y, z, 0.025f, 0.025f, 1, false));
-			effect.setRGBColorF(0.8f, 0.3f, 0.7f);
-			if (colorModifier > -1){
-				effect.setRGBColorF(((colorModifier >> 16) & 0xFF) / 255.0f, ((colorModifier >> 8) & 0xFF) / 255.0f, (colorModifier & 0xFF) / 255.0f);
-			}
-		}
-	}
-
-	@Override
+    @Override
 	public Set<Affinity> getAffinity(){
 		return Sets.newHashSet(Affinity.ARCANE);
 	}

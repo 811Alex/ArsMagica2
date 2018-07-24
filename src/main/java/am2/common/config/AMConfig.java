@@ -3,16 +3,11 @@ package am2.common.config;
 import java.io.File;
 
 import am2.api.math.AMVector2;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleController;
 import am2.common.LogHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class AMConfig extends Configuration{
 
@@ -384,26 +379,6 @@ public class AMConfig extends Configuration{
 		}
 
 		this.initDirectProperties();
-
-		this.save();
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void clientInit(){
-		this.AuraType = this.get(CATEGORY_BETA, this.KEY_AuraType, 15).getInt(15);
-		//AuraType %= AMParticle.particleTypes.length;
-		this.AuraBehaviour = this.get(CATEGORY_BETA, this.KEY_AuraBehaviour, 0).getInt(0);
-		this.AuraBehaviour %= ParticleController.AuraControllerOptions.length;
-		this.AuraAlpha = (float)(this.get(CATEGORY_BETA, this.KEY_AuraAlpha, 1.0D)).getDouble(1.0D);
-		this.AuraScale = (float)(this.get(CATEGORY_BETA, this.KEY_AuraScale, 1.0D).getDouble(1.0));
-		this.AuraColor = this.get(CATEGORY_BETA, this.KEY_AuraColor, 0xFFFFFF).getInt(0xFFFFFF);
-		this.AuraQuantity = this.get(CATEGORY_BETA, this.KEY_AuraQuanity, 1).getInt(1);
-		this.AuraDelay = this.get(CATEGORY_BETA, this.KEY_AuraDelay, 5).getInt(5);
-		this.AuraSpeed = this.get(CATEGORY_BETA, this.KEY_AuraSpeed, 0.02D).getDouble(0.02D);
-		this.AuraRandomColor = this.get(CATEGORY_BETA, this.KEY_AuraColorRandomize, true).getBoolean(true);
-		this.AuraDefaultColor = this.get(CATEGORY_BETA, this.KEY_AuraColorDefault, true).getBoolean(true);
-
-		this.GFXLevel = 2 - Minecraft.getMinecraft().gameSettings.particleSetting;
 
 		this.save();
 	}
@@ -783,28 +758,6 @@ public class AMConfig extends Configuration{
 	//====================================================================================
 	// Setters
 	//====================================================================================
-
-	@SideOnly(Side.CLIENT)
-	public void setAuraIndex(int index){
-		if (index < 0) index = 0;
-		if (index >= AMParticle.particleTypes.length) index = AMParticle.particleTypes.length - 1;
-
-		Property prop = this.get(CATEGORY_BETA, this.KEY_AuraType, 15);
-		prop.set(index);
-
-		this.AuraType = index;
-	}
-
-	public void setAuraBehaviour(int index){
-		if (index < 0) index = 0;
-		if (index >= ParticleController.AuraControllerOptions.length)
-			index = ParticleController.AuraControllerOptions.length - 1;
-
-		Property prop = this.get(CATEGORY_BETA, this.KEY_AuraBehaviour, 0);
-		prop.set(index);
-
-		this.AuraBehaviour = index;
-	}
 
 	public void setAuraColorRandom(boolean value){
 		Property prop = this.get(CATEGORY_BETA, this.KEY_AuraColorRandomize, false);

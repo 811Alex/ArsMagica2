@@ -3,10 +3,7 @@ package am2.common.blocks.tileentity;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import am2.ArsMagica2;
 import am2.api.math.AMVector3;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.packet.AMNetHandler;
 import am2.common.power.PowerNodeRegistry;
 import am2.common.power.PowerTypes;
@@ -69,25 +66,8 @@ public class TileEntitySlipstreamGenerator extends TileEntityAMPower{
 						player.moveEntity(0, factor, 0);
 					}
 				}
-
-				if (worldObj.isRemote)
-					spawnParticles(player);
 				PowerNodeRegistry.For(this.worldObj).consumePower(this, PowerNodeRegistry.For(this.worldObj).getHighestPowerType(this), 0.25f);
 			}
-		}
-	}
-
-	private void spawnParticles(EntityPlayer player){
-		AMParticle wind = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "wind", player.posX, player.posY - player.height, player.posZ);
-		float pitch = player.rotationPitch;
-		float factor = (pitch > 0 ? (pitch - 10) : (pitch + 10)) / -180.0f;
-		if (player.isSneaking())
-			factor = 0.01f;
-		if (wind != null){
-			wind.setMaxAge(10);
-			wind.addRandomOffset(1, 1, 1);
-			wind.setParticleScale(0.1f);
-			wind.AddParticleController(new ParticleFloatUpward(wind, 0, Math.abs(factor) * 2, 1, false));
 		}
 	}
 

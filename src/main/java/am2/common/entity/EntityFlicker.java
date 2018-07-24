@@ -150,22 +150,6 @@ public class EntityFlicker extends EntityAmbientCreature{
 			else if (!worldObj.isRemote && flickCount > 10)
 				flick(); //server flick
 		}
-
-		if (worldObj.isRemote){
-			//for (int i = 0; i < + 1; ++i){
-			if (getRNG().nextInt(10) < ArsMagica2.config.getGFXLevel()){
-				AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, AMParticleDefs.getParticleForAffinity(getFlickerAffinity()), posX, posY, posZ);
-				if (effect != null){
-					effect.addRandomOffset(this.width, this.height, this.width);
-					effect.setDontRequireControllers();
-					effect.setMaxAge(10);
-					if (getFlickerAffinity() == Affinity.EARTH)
-						effect.setParticleScale(0.01f + rand.nextFloat() * 0.05f);
-					else
-						effect.setParticleScale(0.05f + rand.nextFloat() * 0.05f);
-				}
-			}
-		}
 	}
 	
 	
@@ -222,27 +206,7 @@ public class EntityFlicker extends EntityAmbientCreature{
 	}
 
 	private void flick(){
-		if (this.worldObj.isRemote){
-			for (int i = 0; i < 10 * ArsMagica2.config.getGFXLevel(); ++i){
-				AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "radiant", posX, posY, posZ);
-				if (particle != null){
-					particle.AddParticleController(
-							new ParticleMoveOnHeading(
-									particle,
-									worldObj.rand.nextDouble() * 360,
-									worldObj.rand.nextDouble() * 360,
-									worldObj.rand.nextDouble() * 0.3f + 0.01f,
-									1,
-									false));
-					particle.setRGBColorI(getFlickerAffinity().getColor());
-					particle.AddParticleController(new ParticleFadeOut(particle, 1, false).setFadeSpeed((float)(worldObj.rand.nextDouble() * 0.1 + 0.05)).setKillParticleOnFinish(true));
-					particle.setIgnoreMaxAge(true);
-					particle.setParticleScale(0.1f);
-				}
-			}
-		}else{
-			this.setDead();
-		}
+		this.setDead();
 	}
 
 	private void pickNewTargetPosition(){

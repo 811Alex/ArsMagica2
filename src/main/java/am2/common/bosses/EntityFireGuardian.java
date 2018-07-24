@@ -2,17 +2,10 @@ package am2.common.bosses;
 
 import java.util.List;
 
-import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.DamageSources;
 import am2.api.affinity.Affinity;
 import am2.api.sources.DamageSourceFrost;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
-import am2.client.particles.ParticleHoldPosition;
-import am2.client.particles.ParticleLeaveParticleTrail;
-import am2.client.particles.ParticleMoveOnHeading;
-import am2.client.particles.ParticleOrbitEntity;
 import am2.common.bosses.ai.EntityAICastSpell;
 import am2.common.bosses.ai.EntityAIDispel;
 import am2.common.bosses.ai.EntityAIDive;
@@ -86,47 +79,21 @@ public class EntityFireGuardian extends AM2Boss{
 	}
 
 	private void nova(){
-		if (this.worldObj.isRemote){
-			for (int i = 0; i < 36; ++i){
-				AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "explosion_2", posX, posY - 3, posZ);
-				if (particle != null){
-					particle.AddParticleController(new ParticleMoveOnHeading(particle, i * 10, rand.nextInt(20) - 10, 0.2f, 1, false));
-					particle.AddParticleController(new ParticleLeaveParticleTrail(particle, "explosion_2", false, 10, 1, false)
-							.setTicksBetweenSpawns(1)
-							.setParticleRGB_F(1, 1, 1)
-							.addControllerToParticleList(new ParticleHoldPosition(particle, 10, 1, false)));
-					particle.setMaxAge(20);
-					particle.setParticleScale(0.5f);
-					particle.setIgnoreMaxAge(false);
-				}
-			}
-		}else{
-			List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().expand(2.5, 2.5, 2.5).addCoord(0, -3, 0));
-			for (EntityLivingBase ent : entities){
-				if (ent == this)
-					continue;
-				ent.attackEntityFrom(DamageSources.causeFireDamage(this), 5);
-			}
+		List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().expand(2.5, 2.5, 2.5).addCoord(0, -3, 0));
+		for (EntityLivingBase ent : entities){
+			if (ent == this)
+				continue;
+			ent.attackEntityFrom(DamageSources.causeFireDamage(this), 5);
 		}
 	}
 
 	private void flamethrower(){
 		Vec3d look = this.getLook(1.0f);
-		if (worldObj.isRemote){
-			AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "explosion_2", posX + (Math.cos(Math.toRadians(this.renderYawOffset + 90)) * 2), posY + 3, posZ + (Math.sin(Math.toRadians(this.renderYawOffset + 90)) * 2));
-			if (particle != null){
-				particle.AddParticleController(new ParticleMoveOnHeading(particle, this.rotationYaw + 90 + rand.nextInt(20) - 10, rand.nextInt(20) - 10, 0.2f, 1, false));
-				particle.setMaxAge(40);
-				particle.setParticleScale(0.5f);
-				particle.setIgnoreMaxAge(false);
-			}
-		}else{
-			List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().expand(2.5, 2.5, 2.5).addCoord(look.xCoord * 3, 0, look.zCoord * 3));
-			for (EntityLivingBase ent : entities){
-				if (ent == this)
-					continue;
-				ent.attackEntityFrom(DamageSources.causeFireDamage(this), 5);
-			}
+		List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().expand(2.5, 2.5, 2.5).addCoord(look.xCoord * 3, 0, look.zCoord * 3));
+		for (EntityLivingBase ent : entities){
+			if (ent == this)
+				continue;
+			ent.attackEntityFrom(DamageSources.causeFireDamage(this), 5);
 		}
 	}
 
@@ -180,17 +147,6 @@ public class EntityFireGuardian extends AM2Boss{
 
 		if (par1DamageSource.isFireDamage()){
 			this.heal(par2);
-			if (this.worldObj.isRemote){
-				AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "sparkle", posX, posY - 1, posZ);
-				if (particle != null){
-					particle.addRandomOffset(1, 1, 1);
-					particle.AddParticleController(new ParticleFloatUpward(particle, 0, 0.1f, 1, false));
-					particle.AddParticleController(new ParticleOrbitEntity(particle, this, 0.5f, 2, false).setIgnoreYCoordinate(true).SetTargetDistance(0.3f + rand.nextDouble() * 0.3));
-					particle.setMaxAge(20);
-					particle.setParticleScale(0.2f);
-					particle.setRGBColorF(0.1f, 1f, 0.1f);
-				}
-			}
 			return false;
 		}
 

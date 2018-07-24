@@ -1,10 +1,8 @@
 package am2.common.blocks.tileentity.flickers;
 
-import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.affinity.Affinity;
 import am2.api.flickers.IFlickerController;
-import am2.client.particles.AMParticle;
 import am2.common.defs.BlockDefs;
 import am2.common.defs.ItemDefs;
 import am2.api.flickers.AbstractFlickerFunctionality;
@@ -36,41 +34,27 @@ public class FlickerOperatorGentleRains extends AbstractFlickerFunctionality{
 	public boolean DoOperation(World worldObj, IFlickerController<?> habitat, boolean powered){
 		int radius = 6;
 		int diameter = radius * 2 + 1;
-		if (!worldObj.isRemote){
-			int effectX = ((TileEntity)habitat).getPos().getX() - radius + (worldObj.rand.nextInt(diameter));
-			int effectZ = ((TileEntity)habitat).getPos().getZ() - radius + (worldObj.rand.nextInt(diameter));
-			int effectY = ((TileEntity)habitat).getPos().getY() - 1;
-			
-			BlockPos effectPos = new BlockPos(effectX, effectY, effectZ);
+		int effectX = ((TileEntity)habitat).getPos().getX() - radius + (worldObj.rand.nextInt(diameter));
+		int effectZ = ((TileEntity)habitat).getPos().getZ() - radius + (worldObj.rand.nextInt(diameter));
+		int effectY = ((TileEntity)habitat).getPos().getY() - 1;
 
-			while (worldObj.isAirBlock(effectPos) && effectY > 0){
-				effectY--;
-			}
+		BlockPos effectPos = new BlockPos(effectX, effectY, effectZ);
 
-			while (!worldObj.isAirBlock(effectPos) && worldObj.getBlockState(effectPos).getBlock() != Blocks.FARMLAND && effectY > 0){
-				effectY++;
-			}
-
+		while (worldObj.isAirBlock(effectPos) && effectY > 0){
 			effectY--;
-
-			IBlockState block = worldObj.getBlockState(effectPos);
-			if (block.getBlock() == Blocks.FARMLAND && block.getValue(BlockFarmland.MOISTURE) < 7){
-				worldObj.setBlockState(effectPos, block.withProperty(BlockFarmland.MOISTURE, 7));
-				return true;
-			}
-		}else{
-			for (int i = 0; i < ArsMagica2.config.getGFXLevel() * 2; ++i){
-				AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "water_ball", ((TileEntity)habitat).getPos().getX() + 0.5, ((TileEntity)habitat).getPos().getX() + 3, ((TileEntity)habitat).getPos().getX() + 0.5);
-				if (particle != null){
-					particle.setAffectedByGravity();
-					particle.setMaxAge(10);
-					particle.setDontRequireControllers();
-					particle.setParticleScale(0.03f);
-					particle.addRandomOffset(diameter, 0, diameter);
-				}
-			}
 		}
 
+		while (!worldObj.isAirBlock(effectPos) && worldObj.getBlockState(effectPos).getBlock() != Blocks.FARMLAND && effectY > 0){
+			effectY++;
+		}
+
+		effectY--;
+
+		IBlockState block = worldObj.getBlockState(effectPos);
+		if (block.getBlock() == Blocks.FARMLAND && block.getValue(BlockFarmland.MOISTURE) < 7){
+			worldObj.setBlockState(effectPos, block.withProperty(BlockFarmland.MOISTURE, 7));
+			return true;
+		}
 		return false;
 	}
 

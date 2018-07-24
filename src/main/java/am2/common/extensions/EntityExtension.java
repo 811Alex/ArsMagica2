@@ -6,7 +6,6 @@ import am2.api.event.PlayerMagicLevelChangeEvent;
 import am2.api.extensions.IEntityExtension;
 import am2.api.math.AMVector2;
 import am2.api.spell.SpellData;
-import am2.client.particles.AMLineArc;
 import am2.common.armor.ArmorHelper;
 import am2.common.armor.ArsMagicaArmorMaterial;
 import am2.common.armor.infusions.GenericImbuement;
@@ -542,22 +541,6 @@ public class EntityExtension implements IEntityExtension, ICapabilityProvider, I
 				return true;
 		}
 		return false;
-	}
-
-	@Override
-	public void spawnManaLinkParticles() {
-		if (this.entity.worldObj != null && this.entity.worldObj.isRemote) {
-			for (ManaLinkEntry entry : this.manaLinks) {
-				Entity e = this.entity.worldObj.getEntityByID(entry.entityID);
-				if (e != null && e.getDistanceSqToEntity(this.entity) < entry.range && e.ticksExisted % 90 == 0) {
-					AMLineArc arc = (AMLineArc) ArsMagica2.proxy.particleManager.spawn(this.entity.worldObj, "textures/blocks/oreblockbluetopaz.png", e, this.entity);
-					if (arc != null) {
-						arc.setIgnoreAge(false);
-						arc.setRBGColorF(0.17f, 0.88f, 0.88f);
-					}
-				}
-			}
-		}
 	}
 
 	private class ManaLinkEntry {

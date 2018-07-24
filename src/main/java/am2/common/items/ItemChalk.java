@@ -9,8 +9,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemChalk extends ItemArsMagica{
 
@@ -38,18 +36,6 @@ public class ItemChalk extends ItemArsMagica{
 		if (!world.isAirBlock(pos)){
 			return false;
 		}
-		return true;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldRotateAroundWhenRendering(){
-		return true;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean isFull3D(){
 		return true;
 	}
 }

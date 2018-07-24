@@ -1,10 +1,7 @@
 package am2.common.items;
 
-import java.util.List;
-
 import am2.common.defs.ItemDefs;
 import am2.common.extensions.EntityExtension;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -14,10 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemManaPotionBundle extends ItemArsMagica{
 	public ItemManaPotionBundle(){
@@ -101,52 +95,6 @@ public class ItemManaPotionBundle extends ItemArsMagica{
 	private void giveOrDropItem(EntityPlayer player, ItemStack stack){
 		if (!player.inventory.addItemStackToInventory(stack))
 			player.dropItem(stack, true);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List<String> par3List, boolean par4){
-		Item potion = getPotion(par1ItemStack.getItemDamage());
-		if (potion == ItemDefs.lesserManaPotion){
-			par3List.add("Lesser Mana Restoration");
-		}else if (potion == ItemDefs.standardManaPotion){
-			par3List.add("Standard Mana Restoration");
-		}else if (potion == ItemDefs.greaterManaPotion){
-			par3List.add("Greater Mana Restoration");
-		}else if (potion == ItemDefs.epicManaPotion){
-			par3List.add("Epic Mana Restoration");
-		}else if (potion == ItemDefs.legendaryManaPotion){
-			par3List.add("Legendary Mana Restoration");
-		}
-		par3List.add("" + getUses(par1ItemStack.getItemDamage()) + " " + I18n.format("am2.tooltip.uses") + ".");
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List<ItemStack> par3List){
-		par3List.add(new ItemStack(ItemDefs.manaPotionBundle, 1, (0 << 8) + 3));
-		par3List.add(new ItemStack(ItemDefs.manaPotionBundle, 1, (1 << 8) + 3));
-		par3List.add(new ItemStack(ItemDefs.manaPotionBundle, 1, (2 << 8) + 3));
-		par3List.add(new ItemStack(ItemDefs.manaPotionBundle, 1, (3 << 8) + 3));
-		par3List.add(new ItemStack(ItemDefs.manaPotionBundle, 1, (4 << 8) + 3));
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public String getItemStackDisplayName(ItemStack par1ItemStack){
-		Item potion = getPotion(par1ItemStack.getItemDamage());
-		if (potion == ItemDefs.lesserManaPotion){
-			return String.format("%s %s", I18n.format("item.arsmagica2:lesser_mana_potion.name"), I18n.format("item.arsmagica2:potion_bundle.name"));
-		}else if (potion == ItemDefs.standardManaPotion){
-			return String.format("%s %s", I18n.format("item.arsmagica2:standard_mana_potion.name"), I18n.format("item.arsmagica2:potion_bundle.name"));
-		}else if (potion == ItemDefs.greaterManaPotion){
-			return String.format("%s %s", I18n.format("item.arsmagica2:greater_mana_potion.name"), I18n.format("item.arsmagica2:potion_bundle.name"));
-		}else if (potion == ItemDefs.epicManaPotion){
-			return String.format("%s %s", I18n.format("item.arsmagica2:epic_mana_potion.name"), I18n.format("item.arsmagica2:potion_bundle.name"));
-		}else if (potion == ItemDefs.legendaryManaPotion){
-			return String.format("%s %s", I18n.format("item.arsmagica2:legendary_mana_potion.name"), I18n.format("item.arsmagica2:potion_bundle.name"));
-		}
-		return "? " + I18n.format("am2.items.bundle");
 	}
 
 	@Override

@@ -4,13 +4,8 @@ import java.util.ArrayList;
 
 import com.google.common.collect.ImmutableList;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class CompendiumCategory {
 	
@@ -101,17 +96,7 @@ public final class CompendiumCategory {
 	public ResourceLocation getSprite() {
 		return sprite;
 	}
-	
-	@SideOnly(Side.CLIENT)
-	public TextureAtlasSprite getTexture() {
-		return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(getSprite().toString());
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public void registerTexture(TextureMap map) {
-		map.registerSprite(getSprite());
-	}
-	
+
 	public void addEntry(CompendiumEntry entry) {
 		entries.add(entry.setCategory(this));
 	}

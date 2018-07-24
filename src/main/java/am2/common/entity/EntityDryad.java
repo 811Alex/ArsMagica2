@@ -3,8 +3,6 @@ package am2.common.entity;
 import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.affinity.Affinity;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleOrbitEntity;
 import am2.common.bosses.BossSpawnHelper;
 import am2.common.defs.ItemDefs;
 import net.minecraft.entity.EntityCreature;
@@ -58,19 +56,7 @@ public class EntityDryad extends EntityCreature{
 	
 	@Override
 	public void onUpdate(){
-		World world = this.worldObj;
 		super.onUpdate();
-		if (!world.isRemote || world == null){
-			return;
-		}
-		if (worldObj.rand.nextInt(100) == 3){
-			AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, "hr_sparkles_1", this.posX, this.posY + 2, this.posZ);
-			if (effect != null){
-				effect.AddParticleController(new ParticleOrbitEntity(effect, this, worldObj.rand.nextDouble() * 0.2 + 0.2, 1, false));
-				effect.setIgnoreMaxAge(false);
-				effect.setRGBColorF(0.1f, 0.8f, 0.1f);
-			}
-		}
 	}
 
 	@Override

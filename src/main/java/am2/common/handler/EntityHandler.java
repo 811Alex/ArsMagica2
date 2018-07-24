@@ -3,8 +3,6 @@ package am2.common.handler;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.DamageSources;
@@ -36,10 +34,7 @@ import am2.common.spell.ContingencyType;
 import am2.common.spell.SpellCastResult;
 import am2.common.spell.SpellCaster;
 import am2.common.trackers.EntityItemWatcher;
-import am2.common.utils.CloakUtils;
 import am2.common.utils.EntityUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -59,10 +54,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.MouseEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
@@ -77,16 +68,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityHandler {
-	
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void onMouseEvent(MouseEvent event){
-		event.setCanceled(ArsMagica2.proxy.setMouseDWheel(event.getDwheel()));
-	}
 
 	@SubscribeEvent
 	public void attachEntity(AttachCapabilitiesEvent<Entity> event) {
@@ -185,10 +168,7 @@ public class EntityHandler {
 		}
 		if (event.getEntityLiving() instanceof EntityPlayer) playerTick((EntityPlayer) event.getEntityLiving());
 		
-		if (event.getEntity().worldObj.isRemote)
-			EntityExtension.For(event.getEntityLiving()).spawnManaLinkParticles();
-		else
-			EntityExtension.For(event.getEntityLiving()).manaBurnoutTick();
+		EntityExtension.For(event.getEntityLiving()).manaBurnoutTick();
 		EntityExtension ext = EntityExtension.For(event.getEntityLiving());
 		EntityLivingBase ent = event.getEntityLiving();
 		if (event.getEntity().ticksExisted % 20 == 0){
@@ -278,20 +258,7 @@ public class EntityHandler {
 	private void sendUpdate(EntityLivingBase ent, byte id, byte[] data) {
 		AMNetHandler.INSTANCE.sendPacketToAllClientsNear(ent.dimension, ent.posX, ent.posY, ent.posZ, 64, id, new AMDataWriter().add(ent.getEntityId()).add(data).generate());
 	}
-	
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void renderTick (RenderGameOverlayEvent event) {
-		Minecraft.getMinecraft().mcProfiler.startSection("ArsMagica2-Overlay");
-		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-		GL11.glPushMatrix();
-		if (event.getType() == ElementType.CROSSHAIRS)
-			ArsMagica2.proxy.renderGameOverlay();
-		GL11.glPopMatrix();
-		GL11.glPopAttrib();
-		Minecraft.getMinecraft().mcProfiler.endSection();
-	}
-	
+
 	public void playerTick (EntityPlayer player) {
 		EntityExtension ext = EntityExtension.For(player);
 		IAffinityData affData = player.getCapability(AffinityData.INSTANCE, null);
@@ -410,61 +377,7 @@ public class EntityHandler {
 			}
 		}
 	}
-	
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void onPlayerRender(RenderPlayerEvent.Pre event){
-		ItemStack chestPlate = event.getEntityPlayer().inventory.armorInventory[2];
 
-		ModelBiped mainModel = event.getRenderer().getMainModel();
-
-		if (!ArsMagica2.proxy.playerTracker.hasCLS(event.getEntityPlayer().getUniqueID().toString())){
-			if (chestPlate != null && chestPlate.getItem() == ItemDefs.earthArmor){
-				if (mainModel != null){
-					mainModel.bipedLeftArm.isHidden = event.getEntityPlayer().getHeldItemOffhand() != null;
-					mainModel.bipedRightArm.isHidden = event.getEntityPlayer().getHeldItemMainhand() != null;
-				}
-			}else{
-				if (mainModel != null){
-					mainModel.bipedLeftArm.isHidden = false;
-					mainModel.bipedRightArm.isHidden = false;
-				}
-			}
-		}
-
-		double dX = Minecraft.getMinecraft().thePlayer.posX - event.getEntityPlayer().posX;
-		double dY = Minecraft.getMinecraft().thePlayer.posY - event.getEntityPlayer().posY;
-		double dZ = Minecraft.getMinecraft().thePlayer.posZ - event.getEntityPlayer().posZ;
-
-		double dpX = Minecraft.getMinecraft().thePlayer.prevPosX - event.getEntityPlayer().prevPosX;
-		double dpY = Minecraft.getMinecraft().thePlayer.prevPosY - event.getEntityPlayer().prevPosY;
-		double dpZ = Minecraft.getMinecraft().thePlayer.prevPosZ - event.getEntityPlayer().prevPosZ;
-
-		double transX = dpX + (dX - dpX) * event.getPartialRenderTick();
-		double transY = dpY + (dY - dpY) * event.getPartialRenderTick();
-		double transZ = dpZ + (dZ - dpZ) * event.getPartialRenderTick();
-
-		if (EntityExtension.For(event.getEntityPlayer()).getFlipRotation() > 0){
-			GL11.glPushMatrix();
-
-			GL11.glTranslated(-transX, -transY, -transZ);
-			GL11.glRotatef(EntityExtension.For(event.getEntityPlayer()).getFlipRotation(), 0, 0, 1.0f);
-			GL11.glTranslated(transX, transY, transZ);
-
-			float offset = event.getEntityPlayer().height * (EntityExtension.For(event.getEntityPlayer()).getFlipRotation() / 180.0f);
-			GL11.glTranslatef(0, -offset, 0);
-		}
-
-		float shrink = EntityExtension.For(event.getEntityPlayer()).getShrinkPct();
-		if (shrink > 0){
-			GL11.glPushMatrix();
-			//GL11.glTranslatef(0, 0 - 0.5f * shrink, 0);
-			GL11.glScalef(1 - 0.5f * shrink, 1 - 0.5f * shrink, 1 - 0.5f * shrink);
-		}
-		
-		CloakUtils.renderCloakModel(event.getEntityPlayer(), mainModel, event.getPartialRenderTick());
-	}
-	
 	@SubscribeEvent
 	public void onLivingDrops(LivingDropsEvent event){
 		if (EntityUtils.isSummon(event.getEntityLiving()) && !(event.getEntityLiving() instanceof EntityHorse)){
@@ -481,26 +394,7 @@ public class EntityHandler {
 			event.getDrops().add(animalFat);
 		}
 	}
-	
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void onPlayerRender(RenderPlayerEvent.Post event){
-		ModelBiped mainModel = event.getRenderer().getMainModel();
-		if (mainModel != null){
-			mainModel.bipedLeftArm.isHidden = false;
-			mainModel.bipedRightArm.isHidden = false;
-		}
-		
-		if (EntityExtension.For(event.getEntityPlayer()).getFlipRotation() > 0){
-			GL11.glPopMatrix();
-		}
-		if (EntityExtension.For(event.getEntityPlayer()).getShrinkPct() > 0){
-			GL11.glPopMatrix();
-		}
 
-		//CloakUtils.renderCloakModel(event.entityPlayer, mainModel, event.partialRenderTick);
-	}
-	
 	@SubscribeEvent
 	public void onItemPickup(ItemPickupEvent event) {
 		if (event.player == null)

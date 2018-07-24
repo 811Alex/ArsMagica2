@@ -3,11 +3,7 @@ package am2.common.blocks.tileentity;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import am2.ArsMagica2;
 import am2.api.math.AMVector3;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFadeOut;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.defs.BlockDefs;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -34,26 +30,7 @@ public class TileEntityCrystalMarkerSpellExport extends TileEntityCrystalMarker{
 		if (this.updateCounter % RESCAN_INTERVAL == 0){
 			scanForCraftingAltars();
 		}
-
-		if (this.updateCounter % UPDATE_INTERVAL == 0){
-			if (updateFilter() && worldObj.isRemote){
-				spawnParticles();
-			}
-		}
 		this.updateCounter++;
-	}
-
-	private void spawnParticles(){
-		for (int i = 0; i < 15; ++i){
-			AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "sparkle2", pos.getX(), pos.getY(), pos.getZ());
-			if (effect != null){
-				effect.AddParticleController(new ParticleFloatUpward(effect, 0, worldObj.rand.nextFloat() * 0.1f, 1, false));
-				effect.AddParticleController(new ParticleFadeOut(effect, 2, false).setFadeSpeed(0.035f).setKillParticleOnFinish(true));
-				effect.addRandomOffset(0.2, 0.2, 0.2);
-				effect.setRGBColorF(0, 0.5f, 1.0f);
-				effect.setIgnoreMaxAge(true);
-			}
-		}
 	}
 
 	private void scanForCraftingAltars(){

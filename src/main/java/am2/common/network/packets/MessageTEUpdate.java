@@ -11,22 +11,17 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Growlith1223 on 3/4/2017.
  */
 public class MessageTEUpdate implements IMessage {
-    public NBTTagCompound tag = new NBTTagCompound();
-
-    public MessageTEUpdate(){
-
-    }
+    public NBTTagCompound tag;
 
     public MessageTEUpdate(NBTTagCompound val){
         this.tag = val;
     }
+
     @Override
     public void fromBytes(ByteBuf byteBuf) {
         this.tag = ByteBufUtils.readTag(byteBuf);
@@ -38,8 +33,6 @@ public class MessageTEUpdate implements IMessage {
     }
 
     public static class MessageHolder implements IMessageHandler<MessageTEUpdate, IMessage>{
-
-        @SideOnly(Side.CLIENT)
         @Override
         public IMessage onMessage(MessageTEUpdate messageTEUpdate, MessageContext messageContext) {
             Minecraft.getMinecraft().addScheduledTask(()-> {

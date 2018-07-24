@@ -3,14 +3,10 @@ package am2.common.items;
 import java.util.List;
 
 import am2.api.power.IPowerNode;
-import am2.common.defs.SkillDefs;
-import am2.common.extensions.SkillData;
 import am2.common.packet.AMNetHandler;
 import am2.common.power.PowerNodeRegistry;
 import am2.common.power.PowerTypes;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
@@ -22,8 +18,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemSpellStaff extends ItemArsMagica{
 
@@ -55,12 +49,6 @@ public class ItemSpellStaff extends ItemArsMagica{
 		return this;
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean hasEffect(ItemStack par1ItemStack){
-		return isMagiTechStaff();// || getSpellStack(par1ItemStack) != null;
-	}
-
 	public boolean isMagiTechStaff(){
 		return this.castingMode == -1;
 	}
@@ -70,18 +58,6 @@ public class ItemSpellStaff extends ItemArsMagica{
 		if (isMagiTechStaff())
 			return EnumAction.NONE;
 		return EnumAction.BLOCK;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldRotateAroundWhenRendering(){
-		return false;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean isFull3D(){
-		return true;
 	}
 
 //	public void setSpellScroll(ItemStack stack, ItemStack spell){
@@ -127,18 +103,6 @@ public class ItemSpellStaff extends ItemArsMagica{
 //		par3List.add(I18n.format("am2.tooltip.charge") + ": " + (int)chargeRemaining + " / " + maxCharge);
 //		par3List.add("" + chargesRemaining + " " + I18n.format("am2.tooltip.uses") + ".");
 //	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public String getItemStackDisplayName(ItemStack par1ItemStack){
-		if (isMagiTechStaff()){
-			return I18n.format("item.arsmagica2:spell_staff_magitech.name");
-		}
-		String name = super.getItemStackDisplayName(par1ItemStack);
-		if (par1ItemStack.hasTagCompound() && par1ItemStack.getTagCompound().hasKey(NBT_SPELL_NAME))
-			name += " (\2479" + par1ItemStack.getTagCompound().getString(NBT_SPELL_NAME) + "\2477)";
-		return name;
-	}
 
 	@Override
 	public boolean getShareTag(){
@@ -199,22 +163,6 @@ public class ItemSpellStaff extends ItemArsMagica{
 //			}
 //		}
 //	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void onUpdate(ItemStack stack, World world, Entity entity, int par4, boolean par5){
-		super.onUpdate(stack, world, entity, par4, par5);
-		if (entity instanceof EntityPlayerSP){
-			EntityPlayerSP player = (EntityPlayerSP)entity;
-			ItemStack usingItem = player.getActiveItemStack();
-			if (usingItem != null && usingItem.getItem() == this){
-				if (SkillData.For(player).hasSkill(SkillDefs.SPELL_MOTION.getID())){
-					player.movementInput.moveForward *= 2.5F;
-					player.movementInput.moveStrafe *= 2.5F;
-				}
-			}
-		}
-	}
 
 	@Override
 	public int getMaxItemUseDuration(ItemStack itemStack){

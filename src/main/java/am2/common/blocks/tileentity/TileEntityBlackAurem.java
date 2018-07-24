@@ -13,7 +13,6 @@ import am2.api.blocks.IMultiblock;
 import am2.api.blocks.Multiblock;
 import am2.api.blocks.MultiblockGroup;
 import am2.api.blocks.TypedMultiblockGroup;
-import am2.client.particles.AMLineArc;
 import am2.common.blocks.BlockArsMagicaBlock;
 import am2.common.buffs.BuffEffectAstralDistortion;
 import am2.common.buffs.BuffEffectManaRegen;
@@ -30,7 +29,6 @@ import am2.common.entity.EntityWinterGuardianArm;
 import am2.common.power.PowerNodeRegistry;
 import am2.common.power.PowerTypes;
 import am2.common.utils.EntityUtils;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -41,15 +39,12 @@ import net.minecraft.util.math.Vec3d;
 
 public class TileEntityBlackAurem extends TileEntityObelisk {
 
-	private final HashMap<EntityLivingBase, AMLineArc> arcs;
 	private final ArrayList<EntityLivingBase> cachedEntities;
 	private int ticksSinceLastEntityScan = 0;
 	
 	@SuppressWarnings("unchecked")
 	public TileEntityBlackAurem(){
 		super(10000);
-
-		arcs = new HashMap<>();
 
 		cachedEntities = new ArrayList<EntityLivingBase>();
 
@@ -96,22 +91,7 @@ public class TileEntityBlackAurem extends TileEntityObelisk {
 
 	@Override
 	public void update(){
-		if (worldObj.isRemote){
-			Iterator<EntityLivingBase> arcIterator = arcs.keySet().iterator();
-			ArrayList<Entity> toRemove = new ArrayList<Entity>();
-			while (arcIterator.hasNext()){
-				EntityLivingBase arcEnt = arcIterator.next();
-				AMLineArc arc = (AMLineArc)arcs.get(arcEnt);
-				if (arcEnt == null || arcEnt.isDead || arc == null || !arc.isAlive() || arcEnt.getDistanceSq(pos) > 100 || EntityUtils.isSummon(arcEnt))
-					toRemove.add(arcEnt);
-			}
-
-			for (Entity e : toRemove){
-				arcs.remove(e);
-			}
-		}else{
-			surroundingCheckTicks++;
-		}
+		surroundingCheckTicks++;
 
 		if (worldObj.isRemote || ticksSinceLastEntityScan++ > 25){
 			updateNearbyEntities();
@@ -167,17 +147,6 @@ public class TileEntityBlackAurem extends TileEntityObelisk {
 							}
 						}
 					}
-				}
-			}
-
-			if (worldObj.isRemote){
-				if (!arcs.containsKey(ent)){
-					AMLineArc arc = (AMLineArc)ArsMagica2.proxy.particleManager.spawn(worldObj, "textures/blocks/oreblocksunstone.png", pos.getX() + 0.5, pos.getY() + 1.3, pos.getZ() + 0.5, ent);
-					if (arc != null){
-						arc.setExtendToTarget();
-						arc.setRBGColorF(1, 1, 1);
-					}
-					arcs.put(ent, arc);
 				}
 			}
 			if (!worldObj.isRemote)

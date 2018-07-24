@@ -52,31 +52,21 @@ public class AoE extends SpellShape {
 			switch (side) {
 				case UP:
 				case DOWN:
-					if (world.isRemote)
-						spawnAoEParticles(spell, caster, world, x + 0.5f, y + ((side.equals(EnumFacing.DOWN)) ? 0.5f : (target != null ? target.getEyeHeight() : -2.0f)), z + 0.5f, (int) radius);
 					int gravityMagnitude = spell.getModifierCount(SpellModifiers.GRAVITY);
 					return applyStageHorizontal(spell, caster, world, pos, side, (int) Math.floor(radius), gravityMagnitude, giveXP);
 				case NORTH:
 				case SOUTH:
-					if (world.isRemote)
-						spawnAoEParticles(spell, caster, world, x + 0.5f, y - 1, z + 0.5f, (int) radius);
 					return applyStageVerticalZ(spell, caster, world, pos, side, (int) Math.floor(radius), giveXP);
 				case EAST:
 				case WEST:
-					if (world.isRemote)
-						spawnAoEParticles(spell, caster, world, x + 0.5f, y - 1, z + 0.5f, (int) radius);
 					return applyStageVerticalX(spell, caster, world, pos, side, (int) Math.floor(radius), giveXP);
 			}
 		} else {
-			if (world.isRemote)
-				spawnAoEParticles(spell, caster, world, x, y - 1, z, (int) radius);
 			int gravityMagnitude = spell.getModifierCount(SpellModifiers.GRAVITY);
 			return applyStageHorizontal(spell, caster, world, pos, null, (int) Math.floor(radius), gravityMagnitude, giveXP);
 		}
 
 		if (appliedToAtLeastOneEntity) {
-			if (world.isRemote)
-				spawnAoEParticles(spell, caster, world, x, y + 1, z, (int) radius);
 			return SpellCastResult.SUCCESS;
 		}
 
@@ -88,29 +78,6 @@ public class AoE extends SpellShape {
 		return EnumSet.of(SpellModifiers.RADIUS, SpellModifiers.GRAVITY);
 	}
 
-
-	private void spawnAoEParticles(SpellData stack, EntityLivingBase caster, World world, double x, double y, double z, int radius) {
-		String pfxName = AMParticleDefs.getParticleForAffinity(stack.getMainShift());
-		float speed = 0.08f * radius;
-
-		int color = stack.getColor(world, caster, null) & 0xFFFFFF;
-
-		for (int i = 0; i < 360; i += ArsMagica2.config.FullGFX() ? 20 : ArsMagica2.config.LowGFX() ? 40 : 60) {
-			AMParticle effect = (AMParticle) ArsMagica2.proxy.particleManager.spawn(world, pfxName, x, y + 1.5f, z);
-			if (effect != null) {
-				effect.setIgnoreMaxAge(true);
-				effect.AddParticleController(new ParticleMoveOnHeading(effect, i, 0, speed, 1, false));
-				effect.setRGBColorI(color);
-				effect.AddParticleController(new ParticleFadeOut(effect, 1, false).setFadeSpeed(0.05f).setKillParticleOnFinish(true));
-				effect.AddParticleController(
-						new ParticleLeaveParticleTrail(effect, pfxName, false, 5, 1, false)
-								.addControllerToParticleList(new ParticleFadeOut(effect, 1, false).setFadeSpeed(0.1f).setKillParticleOnFinish(true))
-								.setParticleRGB_I(color)
-								.addRandomOffset(0.2f, 0.2f, 0.2f)
-				);
-			}
-		}
-	}
 
 	private SpellCastResult applyStageHorizontal(SpellData stack, EntityLivingBase caster, World world, BlockPos pos, EnumFacing face, int radius, int gravityMagnitude, boolean giveXP) {
 

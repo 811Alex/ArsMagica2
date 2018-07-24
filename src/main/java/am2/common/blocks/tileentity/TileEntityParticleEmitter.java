@@ -2,8 +2,6 @@ package am2.common.blocks.tileentity;
 
 import am2.ArsMagica2;
 import am2.api.math.AMVector3;
-import am2.client.particles.AMParticle;
-import am2.client.particles.AMParticleIcons;
 import am2.common.blocks.BlockParticleEmitter;
 import am2.common.defs.ItemDefs;
 import am2.common.packet.AMDataWriter;
@@ -54,11 +52,6 @@ public class TileEntityParticleEmitter extends TileEntity implements ITickable{
 
 	@Override
 	public void update(){
-		if (worldObj.isRemote && spawnTicks++ >= spawnRate){
-			for (int i = 0; i < particleQuantity; ++i)
-				doSpawn();
-			spawnTicks = 0;
-		}
 		if (!show && !worldObj.isRemote && ((forceShow && showTicks++ > 100) || !forceShow)){
 			showTicks = 0;
 			forceShow = false;
@@ -74,27 +67,6 @@ public class TileEntityParticleEmitter extends TileEntity implements ITickable{
 			worldObj.setBlockState(getPos(), worldObj.getBlockState(pos).withProperty(BlockParticleEmitter.HIDDEN, !forceShow), 3);
 		}
 		worldObj.markAndNotifyBlock(pos, worldObj.getChunkFromBlockCoords(pos), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 3);
-	}
-
-	private void doSpawn(){
-		//if (!hasReceivedFullUpdate) return;
-		double x = randomizeCoord(pos.getX() + 0.5);
-		double y = randomizeCoord(pos.getY() + 0.5);
-		double z = randomizeCoord(pos.getZ() + 0.5);
-		AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, AMParticle.particleTypes[particleType], x, y, z);
-		if (particle != null){
-			particle.AddParticleController(ArsMagica2.proxy.particleManager.createDefaultParticleController(particleBehaviour, particle, new AMVector3(x, y, z).toVec3D(), speed, getBlockMetadata()));
-			particle.setParticleAge(Math.min(Math.max(spawnRate, 10), 40));
-			particle.setIgnoreMaxAge(false);
-			particle.setParticleScale(particleScale);
-			particle.SetParticleAlpha(particleAlpha);
-			if (!defaultColor){
-				if (!randomColor)
-					particle.setRGBColorF(((particleColor >> 16) & 0xFF) / 255f, ((particleColor >> 8) & 0xFF) / 255f, (particleColor & 0xFF) / 255f);
-				else
-					particle.setRGBColorF(worldObj.rand.nextFloat(), worldObj.rand.nextFloat(), worldObj.rand.nextFloat());
-			}
-		}
 	}
 
 	private double randomizeCoord(double base){
@@ -120,8 +92,6 @@ public class TileEntityParticleEmitter extends TileEntity implements ITickable{
 		if (particleQuantity < 1) particleQuantity = 1;
 		if (particleQuantity > 5) particleQuantity = 5;
 		if (particleType < 0) particleType = 0;
-		if (particleType > AMParticleIcons.instance.numParticles())
-			particleType = AMParticleIcons.instance.numParticles() - 1;
 		if (particleBehaviour < 0) particleBehaviour = 0;
 		if (particleBehaviour > 6) particleBehaviour = 6;
 		if (particleScale < 0) particleScale = 0;

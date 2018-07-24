@@ -4,14 +4,11 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import am2.ArsMagica2;
 import am2.api.DamageSources;
 import am2.api.blocks.IMultiblock;
 import am2.api.blocks.IMultiblockController;
 import am2.api.blocks.Multiblock;
 import am2.api.blocks.MultiblockGroup;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.blocks.BlockArsMagicaBlock;
 import am2.common.blocks.BlockArsMagicaBlock.EnumBlockType;
 import am2.common.defs.BlockDefs;
@@ -107,7 +104,6 @@ public class TileEntityManaDrain extends TileEntityAMPower implements IMultibloc
 				}
 			} else {
 				if (!(entity instanceof EntityPlayer)) continue;
-				isWorking = true;
 				if (!worldObj.isRemote) {
 					float toConsume = PowerNodeRegistry.For(worldObj).getPower(this, PowerTypes.NEUTRAL) / 10;
 					if (toConsume > 10)
@@ -117,13 +113,6 @@ public class TileEntityManaDrain extends TileEntityAMPower implements IMultibloc
 					ext.setCurrentMana(ext.getCurrentMana() + toConsume);
 					PowerNodeRegistry.For(worldObj).consumePower(this, PowerTypes.NEUTRAL, toConsume * 10);
 				}
-			}
-		}
-		if (worldObj.isRemote && isWorking) {
-			AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "sparkle2", pos.getX() - 1 + worldObj.rand.nextDouble() * 3, pos.getY() + 2, pos.getZ() - 1 + worldObj.rand.nextDouble() * 3);
-			if (particle != null) {
-				particle.setRGBColorI(0x00AAFF);
-				particle.AddParticleController(new ParticleFloatUpward(particle, 0.1f, worldObj.isBlockIndirectlyGettingPowered(pos) == 0 ? -0.05f : 0.05f, 1, false));
 			}
 		}
 	}

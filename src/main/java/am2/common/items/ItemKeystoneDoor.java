@@ -1,11 +1,8 @@
 package am2.common.items;
 
-import java.util.List;
-
 import am2.common.defs.BlockDefs;
 import am2.common.defs.CreativeTabsDefs;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemDoor;
@@ -15,11 +12,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemKeystoneDoor extends Item{
 
@@ -31,20 +25,6 @@ public class ItemKeystoneDoor extends Item{
 		this.maxStackSize = 1;
 		this.setHasSubtypes(true);
 		this.setCreativeTab(CreativeTabsDefs.tabAM2Items);
-	}
-
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public String getItemStackDisplayName(ItemStack stack){
-		switch (stack.getItemDamage()){
-		case KEYSTONE_DOOR:
-			return I18n.format("item.arsmagica2:keystone_door.name");
-		case SPELL_SEALED_DOOR:
-			return I18n.format("item.arsmagica2:spell_sealed_door.name");
-		default:
-			return I18n.format("item.arsmagica2:unknown.name");
-		}
 	}
 
 	/**
@@ -80,13 +60,6 @@ public class ItemKeystoneDoor extends Item{
 				return EnumActionResult.FAIL;
 			}
 		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list){
-		list.add(new ItemStack(this, 1, KEYSTONE_DOOR));
-		list.add(new ItemStack(this, 1, SPELL_SEALED_DOOR));
 	}
 	
 	public Item registerAndName(String name) {

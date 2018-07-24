@@ -1,21 +1,6 @@
 package am2.common.defs;
 
-import java.util.Map.Entry;
-
-import am2.api.SkillPointRegistry;
 import am2.api.items.ItemFocus;
-import am2.api.skill.SkillPoint;
-import am2.client.items.colorizers.CrystalPhylacteryColorizer;
-import am2.client.items.colorizers.FlickerJarColorizer;
-import am2.client.items.colorizers.LostJournalColorizer;
-import am2.client.items.colorizers.SpellBookColorizer;
-import am2.client.items.rendering.AffinityRenderer;
-import am2.client.items.rendering.CrystalWrenchRenderer;
-import am2.client.items.rendering.DefaultWithMetaRenderer;
-import am2.client.items.rendering.FlickerOperatorRenderer;
-import am2.client.items.rendering.IgnoreMetadataRenderer;
-import am2.client.items.rendering.ManaPotionBundleRenderer;
-import am2.client.items.rendering.SpellRenderer;
 import am2.common.armor.AMArmor;
 import am2.common.armor.ArsMagicaArmorMaterial;
 import am2.common.armor.ItemEarthGuardianArmor;
@@ -81,13 +66,8 @@ import am2.common.items.ItemSpellComponent;
 import am2.common.items.ItemSpellStaff;
 import am2.common.items.ItemWinterGuardianArm;
 import am2.common.items.SpellBase;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
@@ -100,11 +80,7 @@ import net.minecraft.item.ItemShield;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemDefs {
 	
@@ -218,173 +194,6 @@ public class ItemDefs {
 
 
 	public static SpellBase spell = new SpellBase().registerAndName("spell");
-	
-	@SideOnly(Side.CLIENT)
-	public static void initClient () {
-		//Focus
-		registerTexture(mobFocus);
-		registerTexture(lesserFocus);
-		registerTexture(standardFocus);
-		registerTexture(manaFocus);
-		registerTexture(greaterFocus);
-		registerTexture(chargeFocus);
-		registerTexture(itemFocus);
-		registerTexture(playerFocus);
-		registerTexture(creatureFocus);
-		registerTexture(evilBook);
-		
-		registerTexture(spellParchment);
-		
-		registerTexture(arcaneCompendium);
-		registerTexture(blankRune);
-		registerTexture(spellStaffMagitech);
-		
-		registerTexture(magitechGoggles);
-		registerTexture(etherium);
-		registerTexture(chalk);
-		registerTexture(BoundSword);
-		registerTexture(BoundAxe);
-		registerTexture(BoundPickaxe);
-		registerTexture(BoundShovel);
-		registerTexture(BoundHoe);
-		registerTexture(BoundBow);
-		registerTexture(BoundShield);
-		registerTexture(liquidEssenceBottle);
-		
-		registerTexture(natureScythe);
-		registerTexture(winterArm);
-		registerTexture(airSled);
-		registerTexture(arcaneSpellbook);
-		registerTexture(earthArmor);
-		registerTexture(enderBoots);
-		registerTexture(fireEars);
-		registerTexture(lifeWard);
-		registerTexture(lightningCharm);
-		registerTexture(waterOrbs);
-		
-		registerTexture(keystone);
-		registerTexture(magicBroom);
-		
-		registerTexture(manaCake);
-		registerTexture(flickerJar, 0, "_empty");
-		
-		registerTexture(itemKeystoneDoor);
-		registerTexture(spellBook);
-		registerTexture(runeBag);
-		registerTexture(woodenLeg);
-		registerTexture(manaCake);
-		registerTexture(lostJournal);
-		registerTexture(crystalPhylactery);
-		registerTexture(deficitCrystal);
-		
-		registerTexture(mageArmor);
-		registerTexture(mageHood);
-		registerTexture(mageLeggings);
-		registerTexture(mageBoots);
-		
-		registerTexture(battlemageArmor);
-		registerTexture(battlemageHood);
-		registerTexture(battlemageLeggings);
-		registerTexture(battlemageBoots);
-		
-		registerTexture(legendaryManaPotion);
-		registerTexture(epicManaPotion);
-		registerTexture(greaterManaPotion);
-		registerTexture(standardManaPotion);
-		registerTexture(lesserManaPotion);
-		
-		registerTexture(manaMartini);
-		registerTexture(hellCowHorn);
-		registerTexture(journal);
-		registerTexture(essenceBag);
-		registerTexture(workbenchUpgrade);
-		
-		
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new FlickerJarColorizer(), flickerJar);
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new LostJournalColorizer(), lostJournal);
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new CrystalPhylacteryColorizer(), crystalPhylactery);
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new SpellBookColorizer(), spellBook);
-		
-		RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-		
-		renderItem.getItemModelMesher().register(crystalWrench, new CrystalWrenchRenderer(crystalWrench));
-		renderItem.getItemModelMesher().register(flickerFocus, new FlickerOperatorRenderer().addModels(flickerFocus));
-//		Iterator<Affinity> iter = ArsMagicaAPI.getAffinityRegistry().getValues().iterator();
-//		int effMeta = 0;
-//		for (int i = 0; i < ArsMagicaAPI.getAffinityRegistry().getValues().size(); i++) {
-//			if (!iter.hasNext())
-//				break;
-//			Affinity entry = iter.next();
-//			ModelBakery.registerItemVariants(affinityTome, new ModelResourceLocation("arsmagica2:affinity_tome_" + entry.getName(), "inventory"));
-//			renderItem.getItemModelMesher().register(affinityTome, i, new ModelResourceLocation("arsmagica2:affinity_tome_" + entry.getName(), "inventory"));
-//			if (entry.equals(Affinity.NONE)) {
-//				continue;
-//			}
-//			ModelBakery.registerItemVariants(essence, new ModelResourceLocation("arsmagica2:essence_" + entry.getName(), "inventory"));
-//			renderItem.getItemModelMesher().register(essence, effMeta, new ModelResourceLocation("arsmagica2:essence_" + entry.getName(), "inventory"));
-//			effMeta++;
-//		}
-		renderItem.getItemModelMesher().register(essence, new AffinityRenderer("essence_").addModels(essence));
-		renderItem.getItemModelMesher().register(affinityTome, new AffinityRenderer("affinity_tome_").addModels(affinityTome));
-		for (int i = 0; i < 16; i++) {
-			ModelBakery.registerItemVariants(rune, new ModelResourceLocation("arsmagica2:rune_" + EnumDyeColor.byDyeDamage(i).getName().toLowerCase(), "inventory"));
-			renderItem.getItemModelMesher().register(rune, i, new ModelResourceLocation("arsmagica2:rune_" + EnumDyeColor.byDyeDamage(i).getName().toLowerCase(), "inventory"));
-		}
-		for (int i = 0; i < ItemOre.names.length; i++) {
-			ModelResourceLocation loc = new ModelResourceLocation(new ResourceLocation("arsmagica2", "item_ore_" + ItemOre.names[i]), "inventory");
-			ModelBakery.registerItemVariants(itemOre, loc);
-			renderItem.getItemModelMesher().register(itemOre, i, loc);
-		}
-		
-		DefaultWithMetaRenderer coreRenderer = new DefaultWithMetaRenderer(new ModelResourceLocation(core.getRegistryName() + "_base", "inventory"));
-		for (int i = 0; i < 3; i++) {
-			ModelResourceLocation loc = new ModelResourceLocation(core.getRegistryName().toString() + (i == ItemCore.META_BASE_CORE ? "_base" : (i == ItemCore.META_HIGH_CORE ? "_high" : "_pure")), "inventory");
-			ModelBakery.registerItemVariants(core, loc);
-			coreRenderer.addModel(i, loc);			
-		}
-		ModelBakery.registerItemVariants(core, new ModelResourceLocation(core.getRegistryName() + "_base", "inventory"));
-		renderItem.getItemModelMesher().register(core, coreRenderer);
-		
-		renderItem.getItemModelMesher().register(manaPotionBundle, new ManaPotionBundleRenderer());
-		DefaultWithMetaRenderer crystalPhylacteryRenderer = new DefaultWithMetaRenderer(new ModelResourceLocation(crystalPhylactery.getRegistryName(), "inventory"));
-		for(int i = 1; i < 4; i++) {
-			ModelResourceLocation loc = new ModelResourceLocation(crystalPhylactery.getRegistryName().toString() + (i == ItemCrystalPhylactery.META_QUARTER ? "_quarter" : (i == ItemCrystalPhylactery.META_HALF ? "_half" : "_full")), "inventory");
-			ModelBakery.registerItemVariants(crystalPhylactery, loc);
-			crystalPhylacteryRenderer.addModel(i, loc);
-		}
-		ModelBakery.registerItemVariants(crystalPhylactery, new ModelResourceLocation(crystalPhylactery.getRegistryName(), "inventory"));
-		renderItem.getItemModelMesher().register(crystalPhylactery, crystalPhylacteryRenderer);
-		
-		DefaultWithMetaRenderer catalystRenderer = new DefaultWithMetaRenderer(new ModelResourceLocation(bindingCatalyst.getRegistryName(), "inventory"));
-		for (int i = 0; i < 7; i++) {
-			ModelResourceLocation loc = new ModelResourceLocation(bindingCatalyst.getRegistryName() + "_" + ItemBindingCatalyst.NAMES[i], "inventory");
-			ModelBakery.registerItemVariants(bindingCatalyst, loc);
-			catalystRenderer.addModel(i, loc);
-		}
-		ModelBakery.registerItemVariants(bindingCatalyst, new ModelResourceLocation(bindingCatalyst.getRegistryName(), "inventory"));
-		
-		DefaultWithMetaRenderer inforbRenderer = new DefaultWithMetaRenderer(new ModelResourceLocation(infinityOrb.getRegistryName(), "inventory"));
-		for (Entry<Integer, SkillPoint> entry : SkillPointRegistry.getSkillPointMap().entrySet()) {
-			if (entry.getKey().intValue() < 0)
-				continue;
-			ModelResourceLocation loc = new ModelResourceLocation(infinityOrb.getRegistryName() + "_" + entry.getValue().toString().toLowerCase(), "inventory");
-			ModelBakery.registerItemVariants(infinityOrb, loc);
-			inforbRenderer.addModel(entry.getKey(), loc);
-		}
-		renderItem.getItemModelMesher().register(infinityOrb, inforbRenderer);
-		
-		renderItem.getItemModelMesher().register(bindingCatalyst, catalystRenderer);
-		for (int i = 0; i < 3; i++) {
-			ModelResourceLocation loc = new ModelResourceLocation(inscriptionUpgrade.getRegistryName() + "_" + (i + 1), "inventory");
-			ModelBakery.registerItemVariants(inscriptionUpgrade, loc);
-			renderItem.getItemModelMesher().register(inscriptionUpgrade, i, loc);
-		}
-		renderItem.getItemModelMesher().register(spell, new SpellRenderer());
-		
-		
-
-
-	}
 
 	public static void initEnchantedItems(){
 		natureScytheEnchanted = AMEnchantmentHelper.soulbindStack(new ItemStack(natureScythe));
@@ -397,18 +206,5 @@ public class ItemDefs {
 		enderBootsEnchanted = AMEnchantmentHelper.soulbindStack(new ItemStack(enderBoots));
 		lightningCharmEnchanted = AMEnchantmentHelper.soulbindStack(new ItemStack(lightningCharm));
 		lifeWardEnchanted = AMEnchantmentHelper.soulbindStack(new ItemStack(lifeWard));
-	}
-	
-	@SideOnly(Side.CLIENT)
-	private static void registerTexture(Item item) {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, new IgnoreMetadataRenderer( new ModelResourceLocation(item.getRegistryName(), "inventory")));
-	}
-	
-	@SideOnly(Side.CLIENT)
-	private static void registerTexture(Item item, int meta, String suffix) {
-		DefaultWithMetaRenderer renderer = new DefaultWithMetaRenderer(new ModelResourceLocation(item.getRegistryName(), "inventory"));
-		renderer.addModel(meta, new ModelResourceLocation(item.getRegistryName().toString() + suffix, "inventory"));
-		ModelBakery.registerItemVariants(item, new ModelResourceLocation(item.getRegistryName().toString() + suffix, "inventory"), new ModelResourceLocation(item.getRegistryName(), "inventory"));
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, renderer);
 	}
 }

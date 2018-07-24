@@ -1,8 +1,5 @@
 package am2.common.entity;
 
-import am2.ArsMagica2;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFadeOut;
 import am2.common.defs.ItemDefs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -32,19 +29,6 @@ public class EntityAirSled extends EntityLiving{
 	@Override
 	public void onUpdate(){
 		this.stepHeight = 1.02f;
-
-		if (worldObj.isRemote){
-			rotation += 1f;
-			if (this.worldObj.isAirBlock(getPosition().down())){
-				for (int i = 0; i < ArsMagica2.config.getGFXLevel(); ++i){
-					AMParticle cloud = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "sparkle2", posX, posY + 0.5, posZ);
-					if (cloud != null){
-						cloud.addRandomOffset(1, 1, 1);
-						cloud.AddParticleController(new ParticleFadeOut(cloud, 1, false).setFadeSpeed(0.01f));
-					}
-				}
-			}
-		}
 		super.onUpdate();
 	}
 

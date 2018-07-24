@@ -5,14 +5,10 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import am2.ArsMagica2;
 import am2.api.blocks.IKeystoneLockable;
 import am2.api.items.ISpellFocus;
 import am2.api.items.ItemFilterFocus;
 import am2.client.models.SpriteRenderInfo;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
-import am2.client.particles.ParticleMoveOnHeading;
 import am2.common.blocks.BlockSeerStone;
 import am2.common.defs.BlockDefs;
 import am2.common.power.PowerNodeRegistry;
@@ -246,75 +242,6 @@ public class TileEntitySeerStone extends TileEntityAMPower implements IInventory
 					currentAnimation.reset(false);
 					currentAnimation = animations.get(0);
 					currentAnimation.reset(false);
-				}
-			}
-		}
-
-		//animations
-		if (worldObj.isRemote){
-			if (!currentAnimation.isDone){
-				tickCounter++;
-				if (tickCounter == currentAnimation.speed){
-					tickCounter = 0;
-					currentAnimation.incrementIndex();
-				}
-			}else{
-				if (isActive() && hasSight){
-					currentAnimation = GetWeightedRandomAnimation();
-				}
-			}
-
-			if (isActive() && hasSight){
-
-				EnumFacing meta = worldObj.getBlockState(pos).getValue(BlockSeerStone.FACING);
-
-				double yaw = 0;
-				double y = pos.getX() + 0.5;
-				double x = pos.getY() + 0.5;
-				double z = pos.getZ() + 0.5;
-
-				switch (meta){
-				case UP:
-					y += 0.3;
-					break;
-				case DOWN:
-					y -= 0.3;
-					break;
-				case EAST:
-					yaw = 270;
-					z += 0.3;
-					break;
-				case WEST:
-					yaw = 90;
-					z -= 0.3;
-					break;
-				case NORTH:
-					yaw = 180;
-					x += 0.3;
-					break;
-				case SOUTH:
-					yaw = 0;
-					x -= 0.3;
-					break;
-				}
-
-				AMParticle effect = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "sparkle2", x, y, z);
-				if (effect != null){
-					effect.setIgnoreMaxAge(false);
-					effect.setMaxAge(35);
-					//effect.setRGBColorF(0.9f, 0.7f, 0.0f);
-
-					switch (meta){
-					case UP:
-						effect.AddParticleController(new ParticleFloatUpward(effect, 0.1f, -0.01f, 1, false));
-						break;
-					case DOWN:
-						effect.AddParticleController(new ParticleFloatUpward(effect, 0.1f, 0.01f, 1, false));
-						break;
-					default:
-						effect.AddParticleController(new ParticleMoveOnHeading(effect, yaw, 0, 0.01f, 1, false));
-						effect.AddParticleController(new ParticleFloatUpward(effect, 0.1f, 0, 1, false));
-					}
 				}
 			}
 		}

@@ -313,13 +313,6 @@ public class Transformer implements IClassTransformer {
 						}
 					}
 				}
-
-				if (target != null){
-					MethodInsnNode callout = new MethodInsnNode(INVOKESTATIC, "am2/client/gui/AMGuiHelper", "overrideKeyboardInput", "()V", false);
-					mn.instructions.insert(target, callout);
-					LogHelper.info("Core: Success!  Inserted operations!");
-					break;
-				}
 			}
 		}
 
@@ -353,96 +346,6 @@ public class Transformer implements IClassTransformer {
 
 		String method2_searchinstruction_desc = "(Ljava/lang/String;)V";
 
-		// we will be inserting a call to am2.guis.AMGuiHelper.overrideMouseInput()
-		// description (Lnet/minecraft/client/renderer/EntityRenderer;FZ)Z
-		
-		for (MethodNode mn : cn.methods){
-			if (mn.name.equals(method1_name.getVal(isObf)) && mn.desc.equals("(FI)V")){ // setupCameraTransform
-				AbstractInsnNode orientCameraNode = null;
-				AbstractInsnNode gluPerspectiveNode = null;
-				LogHelper.info("Core: Located target method " + mn.name + mn.desc);
-				Iterator<AbstractInsnNode> instructions = mn.instructions.iterator();
-				while (instructions.hasNext()){
-					AbstractInsnNode node = instructions.next();
-					if (node instanceof MethodInsnNode){
-						MethodInsnNode method = (MethodInsnNode)node;
-						if (orientCameraNode == null && (method.name.equals("orientCamera") || method.name.equals("func_78467_g")) && method.desc.equals("(F)V")){ //orientCamera
-							LogHelper.info("Core: Located target method insn node: " + method.name + method.desc);
-							orientCameraNode = node;
-							continue;
-						}else if (gluPerspectiveNode == null && method.name.equals("gluPerspective") && method.desc.equals("(FFFF)V")){
-							LogHelper.info("Core: Located target method insn node: " + method.name + method.desc);
-							gluPerspectiveNode = node;
-							continue;
-						}
-					}
-
-					if (orientCameraNode != null && gluPerspectiveNode != null){
-						//found all nodes we're looking for
-						break;
-					}
-				}
-				if (orientCameraNode != null){
-					VarInsnNode floatset = new VarInsnNode(FLOAD, 1);
-					MethodInsnNode callout = new MethodInsnNode(INVOKESTATIC, "am2/client/gui/AMGuiHelper", "shiftView", "(F)V", false);
-					mn.instructions.insert(orientCameraNode, callout);
-					mn.instructions.insert(orientCameraNode, floatset);
-					LogHelper.info("Core: Success!  Inserted callout function op (shift)!");
-				}
-				if (gluPerspectiveNode != null){
-					VarInsnNode floatset = new VarInsnNode(FLOAD, 1);
-					MethodInsnNode callout = new MethodInsnNode(INVOKESTATIC, "am2/client/gui/AMGuiHelper", "flipView", "(F)V", false);
-					mn.instructions.insert(gluPerspectiveNode, callout);
-					mn.instructions.insert(gluPerspectiveNode, floatset);
-					LogHelper.info("Core: Success!  Inserted callout function op (flip)!");
-				}
-
-			}else if (mn.name.equals(method2_name.getVal(isObf)) && mn.desc.equals(method2_desc)){  //updateCameraAndRender
-				AbstractInsnNode target = null;
-				LogHelper.info("Core: Located target method " + mn.name + mn.desc);
-				Iterator<AbstractInsnNode> instructions = mn.instructions.iterator();
-				AbstractInsnNode node = null;
-				boolean mouseFound = false;
-				while (instructions.hasNext()){
-					node = instructions.next();
-					//look for the line:
-					//this.mc.mcProfiler.startSection("mouse");
-					if (!mouseFound){
-						if (node instanceof LdcInsnNode){
-							if (((LdcInsnNode)node).cst.equals("mouse")){
-								mouseFound = true;
-							}
-						}
-					}else{
-						if (node instanceof MethodInsnNode){
-							MethodInsnNode method = (MethodInsnNode)node;
-							if (method.owner.equals("net/minecraft/profiler/Profiler") && method.name.equals(method2_searchinstruction_function.getVal(isObf)) && method.desc.equals(method2_searchinstruction_desc)){
-								LogHelper.info("Core: Located target method insn node: " + method.owner + "." + method.name + ", " + method.desc);
-								target = node;
-								break;
-							}
-						}
-					}
-				}
-
-				if (target != null){
-					int iRegister = 4;
-
-					VarInsnNode aLoad = new VarInsnNode(ALOAD, 0);
-					VarInsnNode fLoad = new VarInsnNode(FLOAD, 1);
-					VarInsnNode iLoad = new VarInsnNode(ILOAD, iRegister);
-					MethodInsnNode callout = new MethodInsnNode(INVOKESTATIC, "am2/client/gui/AMGuiHelper", "overrideMouseInput", "(Lnet/minecraft/client/renderer/EntityRenderer;FZ)Z", false);
-					VarInsnNode iStore = new VarInsnNode(ISTORE, iRegister);
-
-					mn.instructions.insert(target, iStore);
-					mn.instructions.insert(target, callout);
-					mn.instructions.insert(target, iLoad);
-					mn.instructions.insert(target, fLoad);
-					mn.instructions.insert(target, aLoad);
-					LogHelper.info("Core: Success!  Inserted opcodes!");
-				}
-			}
-		}
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 		cn.accept(cw);
 		return cw.toByteArray();

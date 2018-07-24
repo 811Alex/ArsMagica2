@@ -50,14 +50,7 @@ public abstract class SpellComponent extends AbstractSpellPart {
 	 */
 	public abstract ItemStack[] reagents(EntityLivingBase caster);
 
-	/**
-	 * Spawn visual effects for the component
-	 *
-	 * @param colorModifier The color from the color modifier.  -1 if missing.
-	 */
-	public abstract void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier);
-
-	/**
+    /**
 	 * Gets the affinity of the spell
 	 */
 	public abstract Set<Affinity> getAffinity();

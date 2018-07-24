@@ -3,12 +3,9 @@ package am2.common.blocks.tileentity.flickers;
 import java.util.HashMap;
 import java.util.List;
 
-import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.affinity.Affinity;
 import am2.api.flickers.IFlickerController;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleFloatUpward;
 import am2.common.defs.ItemDefs;
 import am2.common.entity.SpawnBlacklists;
 import am2.api.flickers.AbstractFlickerFunctionality;
@@ -52,15 +49,7 @@ public class FlickerOperatorButchery extends AbstractFlickerFunctionality{
 				count++;
 			entityCount.put(clazz, count);
 			if (count > 2){
-				if (worldObj.isRemote){
-					AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "ghost", ((TileEntity)habitat).getPos().getX() + 0.5, ((TileEntity)habitat).getPos().getY() + 0.7, ((TileEntity)habitat).getPos().getZ() + 0.5);
-					if (particle != null){
-						particle.setMaxAge(20);
-						particle.AddParticleController(new ParticleFloatUpward(particle, 0, 0.05f, 1, false));
-					}
-				}else{
-					creature.attackEntityFrom(DamageSource.generic, 500);
-				}
+				creature.attackEntityFrom(DamageSource.generic, 500);
 				return true;
 			}
 		}

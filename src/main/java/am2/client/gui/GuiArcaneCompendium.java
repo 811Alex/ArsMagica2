@@ -1,14 +1,11 @@
 package am2.client.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
 import am2.api.compendium.CompendiumEntry;
-import am2.api.compendium.pages.CompendiumPage;
 import am2.client.gui.controls.GuiButtonCompendiumNext;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -27,11 +24,9 @@ public class GuiArcaneCompendium extends GuiScreen {
 	private int page = 0;
 	private GuiButtonCompendiumNext nextPage;
 	private GuiButtonCompendiumNext prevPage;
-	private ArrayList<CompendiumPage<?>> pages = new ArrayList<>();
-	
-	public GuiArcaneCompendium(CompendiumEntry entry) {
+
+    public GuiArcaneCompendium(CompendiumEntry entry) {
 		this.entry = entry;
-		this.pages.addAll(this.entry.getPages());
 	}
 	
 	@Override
@@ -40,25 +35,15 @@ public class GuiArcaneCompendium extends GuiScreen {
 		int i1 = (height - ySize) / 2;
 		int idCount = 0;
 		prevPage = new GuiButtonCompendiumNext(idCount++, l + 35, i1 + ySize - 25, false);
-		nextPage = new GuiButtonCompendiumNext(idCount++, l + 315, i1 + ySize - 25, true);
+		nextPage = new GuiButtonCompendiumNext(idCount, l + 315, i1 + ySize - 25, true);
 		
 		prevPage.visible = false;
-		nextPage.visible = pages.size() > 2;
+		nextPage.visible = false;
 		
 		buttonList.add(nextPage);
 		buttonList.add(prevPage);
 		buttonList.add(new GuiButtonCompendiumNext(-1, l + 20, i1 + 15, false));
-		
-		boolean isRightPage = false;
-		int pageID = 0;
-		for (CompendiumPage<?> page : pages) {
-			for (GuiButton button : page.getButtons(idCount, isRightPage ? l + 185 : l + 35, i1)) {
-				buttonList.add(button);
-				page.switchButtonDisplay(pageID == 0 || pageID == 1);
-			}
-			isRightPage = !isRightPage;
-			pageID++;
-		}
+
 		super.initGui();
 	}
 	
@@ -71,17 +56,7 @@ public class GuiArcaneCompendium extends GuiScreen {
 		GlStateManager.color(1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(background);
 		this.drawTexturedModalRect_Classic(l, i1, 0, 0, xSize, ySize, 256, 240);
-		
-		try {
-			int page1 = page;
-			int page2 = page + 1;
-			if (page1 < pages.size())
-				pages.get(page1).render(l + 35, i1 + 20, mouseX, mouseY);
-			if (page2 < pages.size())
-				pages.get(page2).render(l + (xSize / 2) + 5, i1 + 20, mouseX, mouseY);			
-		} catch (Throwable t) {
-		}
-		
+
 		RenderHelper.disableStandardItemLighting();
 		
 		GL11.glPushMatrix();
@@ -96,36 +71,9 @@ public class GuiArcaneCompendium extends GuiScreen {
 		
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
-	
+
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == nextPage.id) {
-			page += 2;
-			if (page > pages.size() - 1)
-				page = pages.size() - 1;
-			page = page & ~1;
-			if (page == ((pages.size() - 1) & ~1))
-				nextPage.visible = false;
-			prevPage.visible = true;
-		}
-		if (button.id == prevPage.id) {
-			page -= 2;
-			if (page < 0)
-				page = 0;
-			if (page == 0)
-				prevPage.visible = false;
-			if (pages.size() > 2)
-				nextPage.visible = true;
-		}
-		if (button.id == -1) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiCompendiumIndex());
-		}
-		int pageID = 0;
-		for (CompendiumPage<?> page : pages) {
-			page.actionPerformed(button);
-			page.switchButtonDisplay(this.page == pageID || this.page + 1 == pageID);
-			pageID++;
-		}
 		super.actionPerformed(button);
 	}
 	
@@ -136,34 +84,16 @@ public class GuiArcaneCompendium extends GuiScreen {
 	
 	@Override
 	protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-		int pageID = 0;
-		for (CompendiumPage<?> page : pages) {
-			page.dragMouse(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
-			page.switchButtonDisplay(this.page == pageID || this.page + 1 == pageID);
-			pageID++;
-		}
 		super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
 	}
 	
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		int pageID = 0;
-		for (CompendiumPage<?> page : pages) {
-			page.mouseClicked(mouseX, mouseY, mouseButton);
-			page.switchButtonDisplay(this.page == pageID || this.page + 1 == pageID);
-			pageID++;
-		}
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 	
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		int pageID = 0;
-		for (CompendiumPage<?> page : pages) {
-			page.mouseReleased(mouseX, mouseY, state);
-			page.switchButtonDisplay(this.page == pageID || this.page + 1 == pageID);
-			pageID++;
-		}
 		super.mouseReleased(mouseX, mouseY, state);
 	}
 	

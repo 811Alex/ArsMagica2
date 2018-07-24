@@ -1,23 +1,16 @@
 package am2.common.items;
 
 import java.util.HashMap;
-import java.util.List;
 
 import am2.common.utils.EntityUtils;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityList.EntityEggInfo;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemCrystalPhylactery extends ItemArsMagica{
 
@@ -34,19 +27,6 @@ public class ItemCrystalPhylactery extends ItemArsMagica{
 		this.spawnableEntities = new HashMap<>();
 		this.setMaxDamage(0);
 		this.setMaxStackSize(1);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List<String> par3List, boolean par4){
-		if (par1ItemStack.hasTagCompound()){
-			String className = par1ItemStack.getTagCompound().getString("SpawnClassName");
-			par3List.add(I18n.format("am2.tooltip.phyEss", I18n.format("entity." + className + ".name")));
-			float pct = par1ItemStack.getTagCompound().getFloat("PercentFilled");
-			par3List.add(I18n.format("am2.tooltip.pctFull", pct));
-		}else{
-			par3List.add(I18n.format("am2.tooltip.empty"));
-		}
 	}
 	
 	public void addFill(ItemStack stack){
@@ -83,12 +63,6 @@ public class ItemCrystalPhylactery extends ItemArsMagica{
 				stack.setItemDamage(META_EMPTY);
 
 		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean hasEffect(ItemStack par1ItemStack){
-		return par1ItemStack.getItemDamage() == META_FULL;
 	}
 
 	public void setSpawnClass(ItemStack stack, Class<? extends Entity> clazz){
@@ -152,21 +126,6 @@ public class ItemCrystalPhylactery extends ItemArsMagica{
 					//e.printStackTrace();
 				}
 			}
-		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List<ItemStack> par3List){
-		par3List.add(new ItemStack(this));
-		for (String s : this.spawnableEntities.keySet()){
-			if (s == null)
-				continue;
-			ItemStack stack = new ItemStack(this, 1, META_FULL);
-			stack.setTagCompound(new NBTTagCompound());
-			stack.getTagCompound().setString("SpawnClassName", s);
-			stack.getTagCompound().setFloat("PercentFilled", 100);
-			par3List.add(stack);
 		}
 	}
 }

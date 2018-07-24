@@ -2,17 +2,11 @@ package am2.common.bosses;
 
 import java.util.List;
 
-import am2.ArsMagica2;
 import am2.api.ArsMagicaAPI;
 import am2.api.DamageSources;
 import am2.api.affinity.Affinity;
 import am2.api.sources.DamageSourceFire;
 import am2.api.sources.DamageSourceFrost;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleApproachEntity;
-import am2.client.particles.ParticleFleeEntity;
-import am2.client.particles.ParticleFloatUpward;
-import am2.client.particles.ParticleOrbitEntity;
 import am2.common.bosses.ai.EntityAICastSpell;
 import am2.common.bosses.ai.EntityAISmash;
 import am2.common.bosses.ai.EntityAIStrikeAttack;
@@ -91,35 +85,17 @@ public class EntityWinterGuardian extends AM2Boss{
 	@Override
 	public void onUpdate(){
 		if (worldObj.getBiome(getPosition()).getEnableSnow() && worldObj.getWorldInfo().isRaining()){
-			if (worldObj.isRemote){
-				AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, "ember", posX + (rand.nextFloat() * 6 - 3), posY + 2 + (rand.nextFloat() * 2 - 1), posZ + (rand.nextFloat() * 6 - 3));
-				if (particle != null){
-					particle.AddParticleController(new ParticleApproachEntity(particle, this, 0.15f, 0.1, 1, false));
-					particle.setIgnoreMaxAge(false);
-					particle.setMaxAge(30);
-					particle.setParticleScale(0.35f);
-					particle.setRGBColorF(0.7843f, 0.5098f, 0.5098f);
-				}
-			}else{
-				this.heal(0.1f);
+			this.heal(0.1f);
+		}
+		if (this.ticksExisted % 100 == 0){
+			List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().expand(2, 2, 2));
+			for (EntityLivingBase entity : entities){
+				if (entity == this)
+					continue;
+				entity.addPotionEffect(new BuffEffectFrostSlowed(220, 1));
+				entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("mining_fatigue"), 220, 3));
 			}
 		}
-
-		if (worldObj.isRemote){
-			updateRotations();
-			spawnParticles();
-		}else{
-			if (this.ticksExisted % 100 == 0){
-				List<EntityLivingBase> entities = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().expand(2, 2, 2));
-				for (EntityLivingBase entity : entities){
-					if (entity == this)
-						continue;
-					entity.addPotionEffect(new BuffEffectFrostSlowed(220, 1));
-					entity.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation("mining_fatigue"), 220, 3));
-				}
-			}
-		}
-
 		super.onUpdate();
 	}
 
@@ -135,25 +111,6 @@ public class EntityWinterGuardian extends AM2Boss{
 	private void updateRotations(){
 		this.orbitRotation += 2f;
 		this.orbitRotation %= 360;
-	}
-
-	private void spawnParticles(){
-		for (int i = 0; i < ArsMagica2.config.getGFXLevel() * 4; ++i){
-			int rnd = rand.nextInt(10);
-			AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(worldObj, rnd < 5 ? "snowflakes" : "ember", posX + (rand.nextFloat() * 0.4 - 0.2), posY + 2, posZ + (rand.nextFloat() * 0.4 - 0.2));
-			if (particle != null){
-				if (rnd < 2 || rnd > 8){
-					particle.AddParticleController(new ParticleOrbitEntity(particle, this, 0.2f, 1, false));
-				}else{
-					particle.AddParticleController(new ParticleFloatUpward(particle, 0.5f, -0.2f, 1, false));
-					particle.AddParticleController(new ParticleFleeEntity(particle, this, 0.06f, 2, 2, false).setKillParticleOnFinish(true));
-				}
-				particle.setIgnoreMaxAge(false);
-				particle.setMaxAge(30);
-				particle.setParticleScale(rnd < 5 ? 0.15f : 0.35f);
-				particle.setRGBColorF(0.5098f, 0.7843f, 0.7843f);
-			}
-		}
 	}
 
 	public float getOrbitRotation(){

@@ -1,18 +1,14 @@
 package am2.common.spell.component;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import am2.ArsMagica2;
 import am2.api.affinity.Affinity;
 import am2.api.spell.SpellComponent;
 import am2.api.spell.SpellData;
 import am2.api.spell.SpellModifiers;
-import am2.client.particles.AMParticle;
-import am2.client.particles.ParticleHoldPosition;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -88,22 +84,7 @@ public class MeltArmor extends SpellComponent{
 		return EnumSet.noneOf(SpellModifiers.class);
 	}
 
-	@Override
-	public void spawnParticles(World world, double x, double y, double z, EntityLivingBase caster, Entity target, Random rand, int colorModifier){
-		AMParticle particle = (AMParticle)ArsMagica2.proxy.particleManager.spawn(world, "radiant", x + 0.5, y + 0.5, z + 0.5);
-		if (particle != null){
-			particle.AddParticleController(new ParticleHoldPosition(particle, 20, 1, false));
-			particle.setMaxAge(20);
-			particle.setParticleScale(0.3f);
-			particle.setRGBColorF(0.7f, 0.4f, 0.2f);
-			particle.SetParticleAlpha(0.1f);
-			if (colorModifier > -1){
-				particle.setRGBColorF(((colorModifier >> 16) & 0xFF) / 255.0f, ((colorModifier >> 8) & 0xFF) / 255.0f, (colorModifier & 0xFF) / 255.0f);
-			}
-		}
-	}
-
-	@Override
+    @Override
 	public Set<Affinity> getAffinity(){
 		return Sets.newHashSet(Affinity.FIRE);
 	}
