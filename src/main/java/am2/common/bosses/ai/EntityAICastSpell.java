@@ -6,7 +6,6 @@ import am2.common.bosses.IArsMagicaBoss;
 import am2.common.spell.SpellCaster;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 

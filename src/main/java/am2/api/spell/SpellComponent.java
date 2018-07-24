@@ -1,6 +1,5 @@
 package am2.api.spell;
 
-import java.util.Random;
 import java.util.Set;
 
 import am2.api.affinity.Affinity;

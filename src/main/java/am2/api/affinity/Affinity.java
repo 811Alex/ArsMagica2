@@ -1,7 +1,6 @@
 package am2.api.affinity;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 import am2.api.ArsMagicaAPI;
 import am2.common.utils.NBTUtils;

@@ -1,7 +1,6 @@
 package am2.common.defs;
 
 import am2.ArsMagica2;
-import am2.api.ArsMagicaAPI;
 import am2.api.affinity.Affinity;
 import am2.api.event.SpellSoundMapEvent;
 import net.minecraft.util.ResourceLocation;

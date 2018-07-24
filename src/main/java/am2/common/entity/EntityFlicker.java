@@ -7,7 +7,6 @@ import am2.api.ArsMagicaAPI;
 import am2.api.affinity.Affinity;
 import am2.api.event.FlickerAffinityEvent;
 import am2.api.math.AMVector3;
-import am2.client.particles.*;
 import am2.common.armor.ArmorHelper;
 import am2.common.armor.infusions.GenericImbuement;
 import am2.common.defs.BlockDefs;
